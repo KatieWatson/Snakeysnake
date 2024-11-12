@@ -1,0 +1,258 @@
+<html>
+  <body>
+    <div id="board"></div>
+  </body>
+  <script>
+
+  arenaWidth = 75;
+  arenaHeight = 40;
+  blockSize = 10;
+
+  centerX = ~~(arenaWidth/2);
+  centerY = ~~(arenaHeight/2);
+  snake = [[centerX, centerY-1], [centerX, centerY], [centerX, centerY+1]];
+  foodPosition = [];
+  turnQueue = [];
+  border = [];
+  snakeObjects = [];
+
+  gradientCount = 10;
+  colors = makeColorSequence(gradientCount);
+  currentColor = 0;
+  direction = "u";
+  growCount = 0;
+
+  moving = true;
+
+  board = document.getElementById("board");
+  board.style.width = `${arenaWidth*blockSize}`;
+  board.style.height = `${arenaHeight*blockSize}`;
+  board.style.backgroundColor = "#9E9E9E";
+  board.style.display = "block";
+  board.style.position = "absolute";
+
+  z = 3;
+
+  function listIncludesPoint(pointsList, point) {
+    for (var i = 0; i < pointsList.length; i++) {
+      if (pointsList[i][0] == point[0] &&
+          pointsList[i][1] == point[1]) {
+            return true;
+          }
+    }
+    return false;
+  }
+
+  function drawSquare(color, position, isBorder) {
+    food = document.createElement("div");
+    board.appendChild(food);
+    food.style.width = isBorder ? `${blockSize + 6}` : `${blockSize}`;
+    food.style.height = isBorder ? `${blockSize + 6}` : `${blockSize}`;
+    food.style.backgroundColor = color;
+    food.style.display = "block";
+    food.style.position = "absolute";
+    food.style.top = isBorder ? `${position[1]*blockSize - 3}` : `${position[1]*blockSize}`;
+    food.style.left = isBorder ? `${position[0]*blockSize - 3}` : `${position[0]*blockSize}`;
+    food.style.zIndex = `${z}`;
+    return food;
+  }
+
+  function drawFood() {
+    x = ~~(Math.random() * arenaWidth);
+    y = ~~(Math.random() * arenaHeight);
+    while(listIncludesPoint(snake, [x,y])) {
+      x = ~~(Math.random() * arenaWidth);
+      y = ~~(Math.random() * arenaHeight);
+    }
+    foodPosition = [x, y];
+    drawSquare("black", foodPosition, false);
+  }
+
+  function drawWholeSnake() {
+    for (var i = 0; i < snake.length; i++) {
+      segmentBorder = drawSquare("white", snake[i], true);
+      border.push(segmentBorder);
+    }
+    for (var i = 0; i < snake.length; i++) {
+      snakeSegment = drawSquare(colors[currentColor], snake[i], false);
+      snakeObjects.push(snakeSegment);
+    }
+    z++;
+  }
+
+  function makeColorSequence(gradientCount) {
+    hues = [0, 30, 57, 100, 200, 270, 290];
+    finalHues = []
+    darker = true;
+    for (var i = 0; i < hues.length; i++) {
+      for (var j = 1; j <= gradientCount; j++) {
+        // 85 - 45
+        if (darker) {
+          finalHues.push(`hsl(${hues[i]}, 100%, ${85-j*~~(40/gradientCount)}%)`);
+        } else {
+          finalHues.push(`hsl(${hues[i]}, 100%, ${45+j*~~(40/gradientCount)}%)`);
+        }
+      }
+      darker = !darker;
+    }
+    for (var i = 0; i < hues.length; i++) {
+      for (var j = 1; j <= gradientCount; j++) {
+        // 85 - 45
+        if (darker) {
+          finalHues.push(`hsl(${hues[i]}, 100%, ${85-j*~~(40/gradientCount)}%)`);
+        } else {
+          finalHues.push(`hsl(${hues[i]}, 100%, ${45+j*~~(40/gradientCount)}%)`);
+        }
+      }
+      darker = !darker;
+    }
+    return finalHues;
+  }
+
+
+  function moveSnake() {
+    if (!moving) {
+      return;
+    }
+    if (turnQueue.length > 0) {
+      changeDirection(turnQueue[turnQueue.length - 1]);
+      turnQueue.pop();
+    }
+    switch (direction) {
+      case "u":
+        snake = [[snake[0][0], snake[0][1] - 1]].concat(snake);
+        break;
+      case "d":
+        snake = [[snake[0][0], snake[0][1] + 1]].concat(snake);
+        break;
+      case "l":
+        snake = [[snake[0][0] - 1, snake[0][1]]].concat(snake);
+        break;
+      case "r":
+        snake = [[snake[0][0] + 1, snake[0][1]]].concat(snake);
+        break;
+    }
+
+    // Check whether the snake got itself or hit a wall.
+    if (listIncludesPoint(snake.slice(1), snake[0]) ||
+        snake[0][0] < 0 ||
+        snake[0][0] > arenaWidth - 1 ||
+        snake[0][1] < 0 ||
+        snake[0][1] > arenaHeight - 1) {
+          clearInterval(step);
+          endScreen();
+          return;
+        }
+
+    // Check whether the snake got the food
+    if (snake[0][0] == foodPosition[0] && snake[0][1] == foodPosition[1]) {
+      growCount += 3;
+      drawFood();
+    }
+    border = [drawSquare("white", snake[0], true)].concat(border);
+    snakeObjects = [drawSquare(colors[currentColor], snake[0], false)].concat(snakeObjects);
+    currentColor++;
+    // Delete the tail if not growing.1
+    if (growCount > 0){
+      growCount--;
+    } else {
+      snake.pop();
+      board.removeChild(border[border.length - 1]);
+      border.pop();
+      snakeObjects.pop();
+    }
+    for (var i = 0; i<border.length; i++) {
+      border[i].style.zIndex = z;
+    }
+    z++;
+    for (var i = 0; i<snakeObjects.length; i++) {
+      snakeObjects[i].style.zIndex = z;
+      snakeObjects[i].style.backgroundColor = colors[currentColor];
+    }
+    currentColor++;
+    if (currentColor >= colors.length) {
+      currentColor = 0;
+    }
+    z++
+  }
+
+drawWholeSnake();
+drawFood();
+var step = setInterval(function(){moveSnake();}, 75);
+
+document.addEventListener('keydown', queueTurn);
+
+function queueTurn(e) {
+  if (e.code == "Space") {
+    moving = !moving;
+  }
+  if (!moving) {
+    return
+  }
+  if (e.code == "ArrowUp" ||
+      e.code == "ArrowDown" ||
+      e.code == "ArrowLeft" ||
+      e.code == "ArrowRight" ){
+      turnQueue = [e.code].concat(turnQueue);
+    }
+}
+
+function changeDirection(code) {
+  switch (code) {
+    case "ArrowUp":
+      if (direction != "d") {
+        direction = "u";
+      }
+      break;
+    case "ArrowDown":
+      if (direction != "u") {
+        direction = "d";
+      }
+      break;
+    case "ArrowLeft":
+      if (direction != "r") {
+        direction = "l";
+      }
+      break;
+    case "ArrowRight":
+      if (direction != "l") {
+        direction = "r";
+      }
+      break;
+  }
+
+}
+
+function startGame() {
+  foodPosition = [];
+  turnQueue = [];
+  border = [];
+  snakeObjects = [];
+  board.innerHTML = "";
+  snake = [[centerX, centerY-1], [centerX, centerY], [centerX, centerY+1]];
+  drawWholeSnake();
+  direction = "u";
+  growCount = 0;
+  step = setInterval(function(){moveSnake();}, 1);
+  drawFood();
+}
+
+function endScreen() {
+  windowWidth = window.innerWidth;
+  windowHeight = window.innerHeight;
+  food = document.createElement("div");
+  document.getElementsByTagName("body")[0].appendChild(food);
+  food.style.width = `${windowWidth}`;
+  food.style.height = `${windowHeight}`;
+  food.style.backgroundColor = "black";
+  food.style.display = "block";
+  food.style.position = "absolute";
+  food.style.top = "0";
+  food.style.left = "0";
+  food.style.zIndex = `${z+100}`;
+  food.style.opacity = `0.8`;
+}
+
+
+  </script>
+</html>
