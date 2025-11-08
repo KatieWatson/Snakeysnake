@@ -5,7 +5,9 @@
   <script>
     arenaWidth = 75;
     arenaHeight = 40;
-    blockSize = 10;
+    blockSize = Math.floor(
+      Math.min((window.innerWidth - 20) / 75, (window.innerHeight - 20) / 40)
+    );
 
     centerX = ~~(arenaWidth / 2);
     centerY = ~~(arenaHeight / 2);
