@@ -3,38 +3,56 @@
     style="
       font-family: 'Courier New', Courier, monospace;
       background-color: #261736;
-      color: white;
+      color: #e0dae7;
     "
   >
-    <div style="display: flex; padding: 10px; font-size: 30px">
-      <img width="50px" src="lil_slug.png" style="padding-right: 5px" />
+    <div
+      style="display: flex; padding: 10px; font-size: 30px; align-items: center"
+    >
+      <img
+        src="lil_slug.png"
+        style="padding-right: 5px; width: 50px; height: fit-content"
+      />
       DISCO JERRY'S SNAKEY SNAKE GAME
     </div>
-    <div
-      id="board"
-      style="
-        background-color: lightslategray;
-        display: block;
-        position: relative;
-      "
-    >
+    <div style="width: fit-content; margin-inline: auto">
       <div
-        id="food"
+        id="board"
         style="
-          visibility: hidden;
+          border: #e0dae7;
+          border-width: 3px;
+          border-style: solid;
+          background-color: lightslategray;
           display: block;
-          position: absolute;
-          background-color: black;
-          height: 8px;
-          width: 8px;
-          z-index: 1000;
+          position: relative;
         "
-      ></div>
+      >
+        <div
+          id="food"
+          style="
+            visibility: hidden;
+            display: block;
+            position: absolute;
+            background-color: black;
+            height: 8px;
+            width: 8px;
+            z-index: 1000;
+          "
+        ></div>
+      </div>
+      <span>Score:</span>
+      <span id="score">0</span>
+      <span id="bestScore" style="margin-left: 10px">
+        <span>Best:</span>
+        <span id="best">0</span>
+      </span>
+      <span id="bestBanner" style="margin-left: 10px; display: none"
+        ><span id="b">B</span>
+        <span id="e">E</span>
+        <span id="s">S</span>
+        <span id="t">T</span></span
+      >
     </div>
-    <span>Score:</span>
-    <span id="score">0</span>
-    <span>Best:</span>
-    <span id="best">0</span>
     <div id="start-screen-overlay" style="color: black">
       <div
         style="
@@ -56,8 +74,7 @@
           background-color: white;
           z-index: 100000001;
           position: absolute;
-          top: 30px;
-          left: 30px;
+          top: 15%;
           border-radius: 90px;
           display: flex;
           padding: 5px;
@@ -91,6 +108,17 @@
           "
         >
           <div>
+            <div style="font-size: 30px">WELCOME</div>
+            <div
+              style="
+                font-size: 16px;
+                padding-bottom: 7px;
+                max-width: 150px;
+                overflow-wrap: normal;
+              "
+            >
+              to disco jerry's snakey snake arena
+            </div>
             <button
               title="spacebar"
               onclick="startGame()"
@@ -103,11 +131,13 @@
                 color: white;
                 background-color: #5a3973;
                 margin-bottom: 10px;
+                cursor: pointer;
               "
             >
               START</button
             ><br />
             <input
+              style="cursor: pointer"
               id="discoToggle"
               checked
               onclick="toggleDisco()"
@@ -138,8 +168,7 @@
           background-color: white;
           z-index: 100000001;
           position: absolute;
-          top: 30px;
-          left: 30px;
+          top: 15%;
           border-radius: 90px;
           display: flex;
           padding: 5px;
@@ -178,6 +207,7 @@
               title="spacebar"
               onclick="startGame()"
               style="
+                cursor: pointer;
                 height: 30px;
                 width: 150px;
                 border-color: #584963;
@@ -191,6 +221,7 @@
               START AGAIN</button
             ><br />
             <input
+              style="cursor: pointer"
               id="discoToggle"
               checked
               onclick="toggleDisco()"
@@ -256,16 +287,20 @@
     function drawSquare(color, position, isBorder) {
       square = document.createElement("div");
       board.appendChild(square);
-      square.style.width = isBorder ? `${blockSize + 6}` : `${blockSize}`;
-      square.style.height = isBorder ? `${blockSize + 6}` : `${blockSize}`;
+      square.style.width = isBorder
+        ? `${blockSize + borderSize * 2}`
+        : `${blockSize}`;
+      square.style.height = isBorder
+        ? `${blockSize + borderSize * 2}`
+        : `${blockSize}`;
       square.style.backgroundColor = color;
       square.style.display = "block";
       square.style.position = "absolute";
       square.style.top = isBorder
-        ? `${position[1] * blockSize - 3}`
+        ? `${position[1] * blockSize - borderSize}`
         : `${position[1] * blockSize}`;
       square.style.left = isBorder
-        ? `${position[0] * blockSize - 3}`
+        ? `${position[0] * blockSize - borderSize}`
         : `${position[0] * blockSize}`;
       square.style.zIndex = `${z}`;
       return square;
@@ -391,6 +426,8 @@
           newHighScore = true;
           best = score;
           document.getElementById("best").innerText = best;
+          document.getElementById("bestScore").style.display = "none";
+          document.getElementById("bestBanner").style.display = "inline";
         }
 
         setFood();
@@ -402,6 +439,10 @@
         ].concat(snakeObjects);
         currentColor++;
       }
+      document.getElementById("b").style.color = colors[currentColor];
+      document.getElementById("e").style.color = colors[currentColor - 2];
+      document.getElementById("s").style.color = colors[currentColor - 4];
+      document.getElementById("t").style.color = colors[currentColor - 6];
       // Delete the tail if not growing.1
       if (growCount > 0) {
         growCount--;
@@ -446,6 +487,7 @@
         e.code == "ArrowLeft" ||
         e.code == "ArrowRight"
       ) {
+        e.preventDefault();
         turnQueue = [e.code].concat(turnQueue);
       }
     }
@@ -482,6 +524,8 @@
       document.getElementById("score").innerText = score;
       overlay.style.visibility = "hidden";
       endOverlay.style.visibility = "hidden";
+      document.getElementById("bestScore").style.display = "inline";
+      document.getElementById("bestBanner").style.display = "none";
       foodPosition = [];
       z = 10;
       turnQueue = [];
@@ -510,6 +554,7 @@
           (window.innerHeight - 20) / arenaHeight
         )
       );
+      borderSize = Math.max(Math.floor(blockSize / 4), 1);
       board.style.width = `${arenaWidth * blockSize}`;
       board.style.height = `${arenaHeight * blockSize}`;
     }
