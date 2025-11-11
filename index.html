@@ -50,12 +50,23 @@
           left: 30px;
           border-radius: 90px;
           display: flex;
+          padding: 5px;
         "
       >
         <img
+          id="discoSlug"
           src="disco_slug.png"
-          width="300px"
-          style="padding: 5px; border-radius: 90px; display: flex"
+          style="
+            width: 300px;
+            height: 300px;
+            border-radius: 90px;
+            display: flex;
+          "
+        />
+        <img
+          id="sadSlug"
+          src="sad_slug.png"
+          style="border-radius: 90px; display: flex; height: 0; width: 0"
         />
         <div
           style="
@@ -399,6 +410,12 @@
     function toggleDisco() {
       discoMode = !discoMode;
       document.getElementById("discoToggle").checked = discoMode;
+      discoSlug = document.getElementById("discoSlug");
+      discoSlug.style.width = discoMode ? "300px" : "0px";
+      discoSlug.style.height = discoMode ? "300px" : "0px";
+      sadSlug = document.getElementById("sadSlug");
+      sadSlug.style.width = discoMode ? "0px" : "300px";
+      sadSlug.style.height = discoMode ? "0px" : "300px";
     }
   </script>
 </html>
