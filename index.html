@@ -442,11 +442,12 @@
           drawSquare(colors[currentColor], snake[0], false),
         ].concat(snakeObjects);
         currentColor++;
+        document.getElementById("b").style.color = colors[currentColor];
+        document.getElementById("e").style.color = colors[currentColor - 2];
+        document.getElementById("s").style.color = colors[currentColor - 4];
+        document.getElementById("t").style.color = colors[currentColor - 6];
       }
-      document.getElementById("b").style.color = colors[currentColor];
-      document.getElementById("e").style.color = colors[currentColor - 2];
-      document.getElementById("s").style.color = colors[currentColor - 4];
-      document.getElementById("t").style.color = colors[currentColor - 6];
+
       // Delete the tail if not growing.1
       if (growCount > 0) {
         growCount--;
@@ -590,6 +591,12 @@
       sadSlug = document.getElementById("sadSlug");
       sadSlug.style.width = discoMode ? "0px" : "300px";
       sadSlug.style.height = discoMode ? "0px" : "300px";
+      if (!discoMode) {
+        document.getElementById("b").style.color = "#e0dae7";
+        document.getElementById("e").style.color = "#e0dae7";
+        document.getElementById("s").style.color = "#e0dae7";
+        document.getElementById("t").style.color = "#e0dae7";
+      }
     }
   </script>
 </html>
