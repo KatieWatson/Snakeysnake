@@ -25,23 +25,71 @@
     <span id="score">0</span>
     <span>Best:</span>
     <span id="best">0</span>
-    <div
-      id="overlay"
-      style="
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        background-color: black;
-        opacity: 80%;
-        display: block;
-        top: 0;
-        left: 0;
-        z-index: 100000000;
-        align-items: center;
-      "
-    >
-      <div>
-        <button onclick="startGame()">START</button>
+    <div id="overlay" style="">
+      <div
+        style="
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          background-color: black;
+          opacity: 80%;
+          display: block;
+          top: 0;
+          left: 0;
+          z-index: 100000000;
+          align-items: center;
+        "
+      ></div>
+
+      <div
+        style="
+          background-color: white;
+          z-index: 100000001;
+          position: absolute;
+          top: 30px;
+          left: 30px;
+          border-radius: 90px;
+          display: flex;
+        "
+      >
+        <img
+          src="disco_slug.png"
+          width="300px"
+          style="padding: 5px; border-radius: 90px; display: flex"
+        />
+        <div
+          style="
+            justify-content: center;
+            min-width: 200px;
+            display: flex;
+            align-items: center;
+          "
+        >
+          <div>
+            <button
+              onclick="startGame()"
+              style="
+                height: 30px;
+                width: 100px;
+                border-color: #584963;
+                border-radius: 30px;
+                box-shadow: none;
+                color: white;
+                background-color: #5a3973;
+                margin-bottom: 10px;
+              "
+            >
+              START</button
+            ><br />
+            <input
+              id="discoToggle"
+              checked
+              onclick="toggleDisco()"
+              type="checkbox"
+            />
+            Disco Mode
+          </div>
+        </div>
       </div>
     </div>
   </body>
@@ -346,6 +394,11 @@
       overlay.style.visibility = "visible";
       moving = false;
       activeGame = false;
+    }
+
+    function toggleDisco() {
+      discoMode = !discoMode;
+      document.getElementById("discoToggle").checked = discoMode;
     }
   </script>
 </html>
