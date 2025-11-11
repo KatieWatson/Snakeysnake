@@ -25,7 +25,7 @@
     <span id="score">0</span>
     <span>Best:</span>
     <span id="best">0</span>
-    <div id="overlay" style="">
+    <div id="start-screen-overlay" style="">
       <div
         style="
           width: 100%;
@@ -51,6 +51,10 @@
           border-radius: 90px;
           display: flex;
           padding: 5px;
+          left: 0;
+          right: 0;
+          margin-inline: auto;
+          width: fit-content;
         "
       >
         <img
@@ -78,6 +82,7 @@
         >
           <div>
             <button
+              title="spacebar"
               onclick="startGame()"
               style="
                 height: 30px;
@@ -103,9 +108,92 @@
         </div>
       </div>
     </div>
+    <div id="end-screen-overlay" style="visibility: hidden">
+      <div
+        style="
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          background-color: black;
+          opacity: 80%;
+          display: block;
+          top: 0;
+          left: 0;
+          z-index: 100000000;
+          align-items: center;
+        "
+      ></div>
+      <div
+        style="
+          background-color: white;
+          z-index: 100000001;
+          position: absolute;
+          top: 30px;
+          left: 30px;
+          border-radius: 90px;
+          display: flex;
+          padding: 5px;
+          left: 0;
+          right: 0;
+          margin-inline: auto;
+          width: fit-content;
+        "
+      >
+        <img
+          id="highScore"
+          src="new_high_score.png"
+          style="border-radius: 90px; display: flex; height: 0; width: 0"
+        />
+        <img
+          id="gameOver"
+          src="game_over.png"
+          style="
+            width: 300px;
+            height: 300px;
+            border-radius: 90px;
+            display: flex;
+          "
+        />
+        <div
+          style="
+            justify-content: center;
+            min-width: 200px;
+            display: flex;
+            align-items: center;
+          "
+        >
+          <div>
+            <button
+              title="spacebar"
+              onclick="startGame()"
+              style="
+                height: 30px;
+                width: 150px;
+                border-color: #584963;
+                border-radius: 30px;
+                box-shadow: none;
+                color: white;
+                background-color: #5a3973;
+                margin-bottom: 10px;
+              "
+            >
+              START AGAIN</button
+            ><br />
+            <input
+              id="discoToggle"
+              checked
+              onclick="toggleDisco()"
+              type="checkbox"
+            />
+            Disco Mode
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
   <script>
     discoMode = true;
+    newHighScore = false;
     score = 0;
     best = 0;
     arenaWidth = 75;
@@ -142,7 +230,8 @@
     board.style.width = `${arenaWidth * blockSize}`;
     board.style.height = `${arenaHeight * blockSize}`;
 
-    overlay = document.getElementById("overlay");
+    overlay = document.getElementById("start-screen-overlay");
+    endOverlay = document.getElementById("end-screen-overlay");
 
     z = 3;
 
@@ -290,6 +379,7 @@
         score += 10;
         document.getElementById("score").innerText = score;
         if (score > best) {
+          newHighScore = true;
           best = score;
           document.getElementById("best").innerText = best;
         }
@@ -377,9 +467,11 @@
     }
 
     function startGame() {
+      newHighScore = false;
       score = 0;
       document.getElementById("score").innerText = score;
       overlay.style.visibility = "hidden";
+      endOverlay.style.visibility = "hidden";
       foodPosition = [];
       z = 10;
       turnQueue = [];
@@ -402,7 +494,18 @@
     }
 
     function endScreen() {
-      overlay.style.visibility = "visible";
+      if (newHighScore) {
+        document.getElementById("highScore").style.width = "300px";
+        document.getElementById("highScore").style.height = "300px";
+        document.getElementById("gameOver").style.width = "0px";
+        document.getElementById("gameOver").style.width = "0px";
+      } else {
+        document.getElementById("highScore").style.width = "0px";
+        document.getElementById("highScore").style.height = "0px";
+        document.getElementById("gameOver").style.width = "300px";
+        document.getElementById("gameOver").style.height = "300px";
+      }
+      endOverlay.style.visibility = "visible";
       moving = false;
       activeGame = false;
     }
