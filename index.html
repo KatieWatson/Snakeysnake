@@ -1,5 +1,15 @@
 <html>
-  <body style="font-family: 'Courier New', Courier, monospace">
+  <body
+    style="
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #261736;
+      color: white;
+    "
+  >
+    <div style="display: flex; padding: 10px; font-size: 30px">
+      <img width="50px" src="lil_slug.png" style="padding-right: 5px" />
+      DISCO JERRY'S SNAKEY SNAKE GAME
+    </div>
     <div
       id="board"
       style="
@@ -25,7 +35,7 @@
     <span id="score">0</span>
     <span>Best:</span>
     <span id="best">0</span>
-    <div id="start-screen-overlay" style="">
+    <div id="start-screen-overlay" style="color: black">
       <div
         style="
           width: 100%;
@@ -108,7 +118,7 @@
         </div>
       </div>
     </div>
-    <div id="end-screen-overlay" style="visibility: hidden">
+    <div id="end-screen-overlay" style="visibility: hidden; color: black">
       <div
         style="
           width: 100%;
@@ -163,6 +173,7 @@
           "
         >
           <div>
+            <div id="finalScore" style="font-size: 50px"></div>
             <button
               title="spacebar"
               onclick="startGame()"
@@ -198,9 +209,7 @@
     best = 0;
     arenaWidth = 75;
     arenaHeight = 40;
-    blockSize = Math.floor(
-      Math.min((window.innerWidth - 20) / 75, (window.innerHeight - 20) / 40)
-    );
+    setArenaSize();
 
     centerX = ~~(arenaWidth / 2);
     centerY = ~~(arenaHeight / 2);
@@ -467,6 +476,7 @@
     }
 
     function startGame() {
+      setArenaSize();
       newHighScore = false;
       score = 0;
       document.getElementById("score").innerText = score;
@@ -493,7 +503,19 @@
       setFood();
     }
 
+    function setArenaSize() {
+      blockSize = Math.floor(
+        Math.min(
+          (window.innerWidth - 20) / arenaWidth,
+          (window.innerHeight - 20) / arenaHeight
+        )
+      );
+      board.style.width = `${arenaWidth * blockSize}`;
+      board.style.height = `${arenaHeight * blockSize}`;
+    }
+
     function endScreen() {
+      document.getElementById("finalScore").innerText = `${score}`;
       if (newHighScore) {
         document.getElementById("highScore").style.width = "300px";
         document.getElementById("highScore").style.height = "300px";
