@@ -1,8 +1,54 @@
 <html>
-  <body>
-    <div id="board"></div>
+  <body style="font-family: 'Courier New', Courier, monospace">
+    <div
+      id="board"
+      style="
+        background-color: lightslategray;
+        display: block;
+        position: relative;
+      "
+    >
+      <div
+        id="food"
+        style="
+          visibility: hidden;
+          display: block;
+          position: absolute;
+          background-color: black;
+          height: 8px;
+          width: 8px;
+          z-index: 1000;
+        "
+      ></div>
+    </div>
+    <span>Score:</span>
+    <span id="score">0</span>
+    <span>Best:</span>
+    <span id="best">0</span>
+    <div
+      id="overlay"
+      style="
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background-color: black;
+        opacity: 80%;
+        display: block;
+        top: 0;
+        left: 0;
+        z-index: 100000000;
+        align-items: center;
+      "
+    >
+      <div>
+        <button onclick="startGame()">START</button>
+      </div>
+    </div>
   </body>
   <script>
+    discoMode = true;
+    score = 0;
+    best = 0;
     arenaWidth = 75;
     arenaHeight = 40;
     blockSize = Math.floor(
@@ -27,14 +73,17 @@
     direction = "u";
     growCount = 0;
 
-    moving = true;
+    activeGame = false;
+    moving = false;
+    step = setInterval(function () {
+      moveSnake();
+    }, 75);
 
     board = document.getElementById("board");
     board.style.width = `${arenaWidth * blockSize}`;
     board.style.height = `${arenaHeight * blockSize}`;
-    board.style.backgroundColor = "#9E9E9E";
-    board.style.display = "block";
-    board.style.position = "absolute";
+
+    overlay = document.getElementById("overlay");
 
     z = 3;
 
@@ -48,42 +97,58 @@
     }
 
     function drawSquare(color, position, isBorder) {
-      food = document.createElement("div");
-      board.appendChild(food);
-      food.style.width = isBorder ? `${blockSize + 6}` : `${blockSize}`;
-      food.style.height = isBorder ? `${blockSize + 6}` : `${blockSize}`;
-      food.style.backgroundColor = color;
-      food.style.display = "block";
-      food.style.position = "absolute";
-      food.style.top = isBorder
+      square = document.createElement("div");
+      board.appendChild(square);
+      square.style.width = isBorder ? `${blockSize + 6}` : `${blockSize}`;
+      square.style.height = isBorder ? `${blockSize + 6}` : `${blockSize}`;
+      square.style.backgroundColor = color;
+      square.style.display = "block";
+      square.style.position = "absolute";
+      square.style.top = isBorder
         ? `${position[1] * blockSize - 3}`
         : `${position[1] * blockSize}`;
-      food.style.left = isBorder
+      square.style.left = isBorder
         ? `${position[0] * blockSize - 3}`
         : `${position[0] * blockSize}`;
-      food.style.zIndex = `${z}`;
-      return food;
+      square.style.zIndex = `${z}`;
+      return square;
     }
 
-    function drawFood() {
+    function moveSquare(id, position) {
+      square = document.getElementById(id);
+      console.log(square);
+      console.log(id);
+      square.style.width = `${blockSize}`;
+      square.style.height = `${blockSize}`;
+      square.style.visibility = "visible";
+      square.style.top = `${position[1] * blockSize}`;
+      square.style.left = `${position[0] * blockSize}`;
+      square.style.zIndex = `${z}`;
+      return square;
+    }
+
+    function setFood() {
       x = ~~(Math.random() * arenaWidth);
       y = ~~(Math.random() * arenaHeight);
       while (listIncludesPoint(snake, [x, y])) {
         x = ~~(Math.random() * arenaWidth);
         y = ~~(Math.random() * arenaHeight);
       }
+      console.log(`Food set at ${x}, ${y}`);
       foodPosition = [x, y];
-      drawSquare("black", foodPosition, false);
+      moveSquare("food", foodPosition);
     }
 
     function drawWholeSnake() {
       for (var i = 0; i < snake.length; i++) {
-        segmentBorder = drawSquare("white", snake[i], true);
+        segmentBorder = drawSquare("white", snake[i], discoMode);
         border.push(segmentBorder);
       }
-      for (var i = 0; i < snake.length; i++) {
-        snakeSegment = drawSquare(colors[currentColor], snake[i], false);
-        snakeObjects.push(snakeSegment);
+      if (discoMode) {
+        for (var i = 0; i < snake.length; i++) {
+          snakeSegment = drawSquare(colors[currentColor], snake[i], false);
+          snakeObjects.push(snakeSegment);
+        }
       }
       z++;
     }
@@ -126,7 +191,7 @@
     }
 
     function moveSnake() {
-      if (!moving) {
+      if (!moving || !activeGame) {
         return;
       }
       if (turnQueue.length > 0) {
@@ -156,7 +221,6 @@
         snake[0][1] < 0 ||
         snake[0][1] > arenaHeight - 1
       ) {
-        clearInterval(step);
         endScreen();
         return;
       }
@@ -164,13 +228,22 @@
       // Check whether the snake got the food
       if (snake[0][0] == foodPosition[0] && snake[0][1] == foodPosition[1]) {
         growCount += 3;
-        drawFood();
+        score += 10;
+        document.getElementById("score").innerText = score;
+        if (score > best) {
+          best = score;
+          document.getElementById("best").innerText = best;
+        }
+
+        setFood();
       }
-      border = [drawSquare("white", snake[0], true)].concat(border);
-      snakeObjects = [drawSquare(colors[currentColor], snake[0], false)].concat(
-        snakeObjects
-      );
-      currentColor++;
+      border = [drawSquare("white", snake[0], discoMode)].concat(border);
+      if (discoMode) {
+        snakeObjects = [
+          drawSquare(colors[currentColor], snake[0], false),
+        ].concat(snakeObjects);
+        currentColor++;
+      }
       // Delete the tail if not growing.1
       if (growCount > 0) {
         growCount--;
@@ -195,16 +268,15 @@
       z++;
     }
 
-    drawWholeSnake();
-    drawFood();
-    var step = setInterval(function () {
-      moveSnake();
-    }, 75);
-
     document.addEventListener("keydown", queueTurn);
 
     function queueTurn(e) {
       if (e.code == "Space") {
+        e.preventDefault();
+        if (!activeGame) {
+          startGame();
+          return;
+        }
         moving = !moving;
       }
       if (!moving) {
@@ -246,7 +318,11 @@
     }
 
     function startGame() {
+      score = 0;
+      document.getElementById("score").innerText = score;
+      overlay.style.visibility = "hidden";
       foodPosition = [];
+      z = 10;
       turnQueue = [];
       border = [];
       snakeObjects = [];
@@ -256,29 +332,20 @@
         [centerX, centerY],
         [centerX, centerY + 1],
       ];
+
       drawWholeSnake();
       direction = "u";
       growCount = 0;
-      step = setInterval(function () {
-        moveSnake();
-      }, 1);
-      drawFood();
+      moving = true;
+      activeGame = true;
+      drawSquare("black", [0, 0], false).id = "food";
+      setFood();
     }
 
     function endScreen() {
-      windowWidth = window.innerWidth;
-      windowHeight = window.innerHeight;
-      food = document.createElement("div");
-      document.getElementsByTagName("body")[0].appendChild(food);
-      food.style.width = `${windowWidth}`;
-      food.style.height = `${windowHeight}`;
-      food.style.backgroundColor = "black";
-      food.style.display = "block";
-      food.style.position = "absolute";
-      food.style.top = "0";
-      food.style.left = "0";
-      food.style.zIndex = `${z + 100}`;
-      food.style.opacity = `0.8`;
+      overlay.style.visibility = "visible";
+      moving = false;
+      activeGame = false;
     }
   </script>
 </html>
