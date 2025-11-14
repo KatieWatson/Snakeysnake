@@ -287,9 +287,12 @@
 
     activeGame = false;
     moving = false;
-    step = setInterval(function () {
-      moveSnake();
-    }, 75);
+    step = setInterval(
+      function () {
+        moveSnake();
+      },
+      isMobileScreen() ? 100 : 75
+    );
 
     board = document.getElementById("board");
     board.style.width = `${arenaWidth * blockSize}`;
