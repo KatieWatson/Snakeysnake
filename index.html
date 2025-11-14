@@ -58,6 +58,9 @@
         <span id="t">T</span></span
       >
     </div>
+    <div style="width: 100%; justify-content: center; display: flex">
+      <img id="dPad" src="d_pad.png" />
+    </div>
     <div id="start-screen-overlay" style="color: black">
       <div
         style="
@@ -247,6 +250,23 @@
     arenaHeight = 40;
     setArenaSize();
 
+    function isMobileScreen() {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      return (
+        /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(
+          userAgent
+        ) || /android|ipad|playbook|silk/i.test(userAgent)
+      );
+    }
+
+    const dPad = document.getElementById("dPad");
+
+    if (isMobileScreen()) {
+      dPad.style.display = "block";
+    } else {
+      dPad.style.display = "none";
+    }
+
     centerX = ~~(arenaWidth / 2);
     centerY = ~~(arenaHeight / 2);
     snake = [
@@ -313,8 +333,6 @@
 
     function moveSquare(id, position) {
       square = document.getElementById(id);
-      console.log(square);
-      console.log(id);
       square.style.width = `${blockSize}`;
       square.style.height = `${blockSize}`;
       square.style.visibility = "visible";
@@ -331,7 +349,6 @@
         x = ~~(Math.random() * arenaWidth);
         y = ~~(Math.random() * arenaHeight);
       }
-      console.log(`Food set at ${x}, ${y}`);
       foodPosition = [x, y];
       moveSquare("food", foodPosition);
     }
@@ -475,6 +492,40 @@
 
     document.addEventListener("keydown", queueTurn);
 
+    const dPadRect = dPad.getBoundingClientRect();
+
+    function handleTouch(event) {
+      const touch = event.touches[0];
+      const clientX = touch.clientX;
+      const clientY = touch.clientY;
+      const xInsideElement = clientX - dPadRect.left;
+      const yInsideElement = clientY - dPadRect.top - dPad.height / 2;
+
+      if (Math.abs(yInsideElement - xInsideElement) < 10) return;
+      if (Math.abs(xInsideElement) > Math.abs(yInsideElement)) {
+        // Left or right
+        if (xInsideElement < 0) {
+          queueTurn({ code: "ArrowLeft", preventDefault: () => {} });
+        } else {
+          queueTurn({ code: "ArrowRight", preventDefault: () => {} });
+        }
+      } else {
+        // Up or down
+        if (yInsideElement < 0) {
+          queueTurn({ code: "ArrowUp", preventDefault: () => {} });
+        } else {
+          queueTurn({ code: "ArrowDown", preventDefault: () => {} });
+        }
+      }
+    }
+
+    dPad.addEventListener("touchstart", handleTouch);
+
+    dPad.addEventListener("touchmove", (event) => {
+      event.preventDefault();
+      handleTouch(event);
+    });
+
     function queueTurn(e) {
       if (e.code == "Space") {
         e.preventDefault();
@@ -494,7 +545,7 @@
         e.code == "ArrowRight"
       ) {
         e.preventDefault();
-        turnQueue = [e.code].concat(turnQueue);
+        if (turnQueue[0] !== e.code) turnQueue = [e.code].concat(turnQueue);
       }
     }
 
