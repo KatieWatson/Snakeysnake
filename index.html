@@ -205,9 +205,27 @@
       <div class="popover">
         <img id="highScore" src="new_high_score.png" class="pop-over-img" />
         <img id="gameOver" src="game_over.png" class="pop-over-img" />
+        <img
+          id="sadSlug2"
+          src="sad_slug.png"
+          class="pop-over-img"
+          style="display: none"
+        />
+        <img
+          id="discoSlug2"
+          src="disco_slug.png"
+          class="pop-over-img"
+          style="display: none"
+        />
         <div class="popover-text">
           <div>
             <div id="finalScore" style="font-size: 2.5em"></div>
+            <div
+              id="mobileScore"
+              style="font-size: 0.9em; margin-top: -0.4em; margin-bottom: 0.4em"
+            >
+              (mobile)
+            </div>
             <button class="start-button" title="spacebar" onclick="startGame()">
               START AGAIN</button
             ><br />
@@ -243,11 +261,14 @@
     }
 
     const dPad = document.getElementById("dPad");
+    const mobileScore = document.getElementById("mobileScore");
 
     if (isMobileScreen()) {
       dPad.style.display = "block";
+      mobileScore.style.display = "block";
     } else {
       dPad.style.display = "none";
+      mobileScore.style.display = "none";
     }
 
     centerX = ~~(arenaWidth / 2);
@@ -631,6 +652,8 @@
 
     function endScreen() {
       document.getElementById("finalScore").innerText = `${score}`;
+      document.getElementById("sadSlug2").style.display = "none";
+      document.getElementById("discoSlug2").style.display = "none";
       if (newHighScore) {
         document.getElementById("highScore").style.display = "flex";
         document.getElementById("gameOver").style.display = "none";
@@ -655,6 +678,15 @@
         document.getElementById("e").style.color = "#e0dae7";
         document.getElementById("s").style.color = "#e0dae7";
         document.getElementById("t").style.color = "#e0dae7";
+        document.getElementById("sadSlug2").style.display = "flex";
+        document.getElementById("highScore").style.display = "none";
+        document.getElementById("discoSlug2").style.display = "none";
+        document.getElementById("gameOver").style.display = "none";
+      } else {
+        document.getElementById("sadSlug2").style.display = "none";
+        document.getElementById("highScore").style.display = "none";
+        document.getElementById("discoSlug2").style.display = "flex";
+        document.getElementById("gameOver").style.display = "none";
       }
     }
   </script>
