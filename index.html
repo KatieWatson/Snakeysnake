@@ -2,48 +2,104 @@
   <head>
     <title>Disco Jerry's Snakey Snake</title>
     <link rel="icon" type="image/png" href="favicon.png" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <style>
+      #board {
+        border: #e0dae7;
+        border-width: 3px;
+        border-style: solid;
+        background-color: lightslategray;
+        display: block;
+        position: relative;
+        margin-block: 8px;
+      }
+      #food {
+        visibility: hidden;
+        display: block;
+        position: absolute;
+        background-color: black;
+        height: 8px;
+        width: 8px;
+        z-index: 1000;
+      }
+      .overlay {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background-color: black;
+        opacity: 80%;
+        display: block;
+        top: 0;
+        left: 0;
+        z-index: 100000000;
+        align-items: center;
+      }
+      .popover {
+        background-color: white;
+        z-index: 100000001;
+        position: absolute;
+        top: 15%;
+        border-radius: 90px;
+        display: flex;
+        padding: 5px;
+        left: 0;
+        right: 0;
+        margin-inline: auto;
+        width: fit-content;
+      }
+      .pop-over-img {
+        width: 300px;
+        height: 300px;
+        border-radius: 90px;
+        display: flex;
+      }
+      .start-button {
+        cursor: pointer;
+        height: 30px;
+        width: 150px;
+        border-color: #584963;
+        border-radius: 30px;
+        box-shadow: none;
+        color: white;
+        background-color: #5a3973;
+        margin-bottom: 10px;
+      }
+      @media (max-width: 600px) {
+        .testElement {
+          background-color: lightblue;
+        }
+      }
+      @media (min-width: 600px) {
+        .testElement {
+          background-color: pink;
+        }
+      }
+    </style>
   </head>
   <body
     style="
       font-family: 'Courier New', Courier, monospace;
       background-color: #261736;
       color: #e0dae7;
+      display: initial;
     "
   >
     <div
-      style="display: flex; padding: 10px; font-size: 30px; align-items: center"
+      style="display: flex; padding: 10px; font-size: 2em; align-items: center"
     >
       <img
         src="lil_slug.png"
         style="padding-right: 5px; width: 50px; height: fit-content"
       />
+
       DISCO JERRY'S SNAKEY SNAKE GAME
     </div>
     <div style="width: fit-content; margin-inline: auto">
-      <div
-        id="board"
-        style="
-          border: #e0dae7;
-          border-width: 3px;
-          border-style: solid;
-          background-color: lightslategray;
-          display: block;
-          position: relative;
-          margin-block: 8px;
-        "
-      >
-        <div
-          id="food"
-          style="
-            visibility: hidden;
-            display: block;
-            position: absolute;
-            background-color: black;
-            height: 8px;
-            width: 8px;
-            z-index: 1000;
-          "
-        ></div>
+      <div id="board">
+        <div id="food"></div>
       </div>
       <span>Score:</span>
       <span id="score">0</span>
@@ -59,53 +115,18 @@
       >
     </div>
     <div style="width: 100%; justify-content: center; display: flex">
-      <img id="dPad" src="d_pad.png" />
+      <img id="dPad" src="d_pad.png" style="width: inherit" />
     </div>
     <div id="start-screen-overlay" style="color: black">
-      <div
-        style="
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          background-color: black;
-          opacity: 80%;
-          display: block;
-          top: 0;
-          left: 0;
-          z-index: 100000000;
-          align-items: center;
-        "
-      ></div>
+      <div class="overlay"></div>
 
-      <div
-        style="
-          background-color: white;
-          z-index: 100000001;
-          position: absolute;
-          top: 15%;
-          border-radius: 90px;
-          display: flex;
-          padding: 5px;
-          left: 0;
-          right: 0;
-          margin-inline: auto;
-          width: fit-content;
-        "
-      >
-        <img
-          id="discoSlug"
-          src="disco_slug.png"
-          style="
-            width: 300px;
-            height: 300px;
-            border-radius: 90px;
-            display: flex;
-          "
-        />
+      <div class="popover">
+        <img id="discoSlug" src="disco_slug.png" class="pop-over-img" />
         <img
           id="sadSlug"
           src="sad_slug.png"
-          style="border-radius: 90px; display: flex; height: 0; width: 0"
+          class="pop-over-img"
+          style="display: none"
         />
         <div
           style="
@@ -116,10 +137,10 @@
           "
         >
           <div>
-            <div style="font-size: 30px">WELCOME</div>
+            <div style="font-size: 2em">WELCOME</div>
             <div
               style="
-                font-size: 16px;
+                font-size: 1em;
                 padding-bottom: 7px;
                 max-width: 150px;
                 overflow-wrap: normal;
@@ -127,21 +148,7 @@
             >
               to disco jerry's snakey snake arena
             </div>
-            <button
-              title="spacebar"
-              onclick="startGame()"
-              style="
-                height: 30px;
-                width: 100px;
-                border-color: #584963;
-                border-radius: 30px;
-                box-shadow: none;
-                color: white;
-                background-color: #5a3973;
-                margin-bottom: 10px;
-                cursor: pointer;
-              "
-            >
+            <button title="spacebar" onclick="startGame()" class="start-button">
               START</button
             ><br />
             <input
@@ -157,50 +164,10 @@
       </div>
     </div>
     <div id="end-screen-overlay" style="visibility: hidden; color: black">
-      <div
-        style="
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          background-color: black;
-          opacity: 80%;
-          display: block;
-          top: 0;
-          left: 0;
-          z-index: 100000000;
-          align-items: center;
-        "
-      ></div>
-      <div
-        style="
-          background-color: white;
-          z-index: 100000001;
-          position: absolute;
-          top: 15%;
-          border-radius: 90px;
-          display: flex;
-          padding: 5px;
-          left: 0;
-          right: 0;
-          margin-inline: auto;
-          width: fit-content;
-        "
-      >
-        <img
-          id="highScore"
-          src="new_high_score.png"
-          style="border-radius: 90px; display: flex; height: 0; width: 0"
-        />
-        <img
-          id="gameOver"
-          src="game_over.png"
-          style="
-            width: 300px;
-            height: 300px;
-            border-radius: 90px;
-            display: flex;
-          "
-        />
+      <div class="overlay"></div>
+      <div class="popover">
+        <img id="highScore" src="new_high_score.png" class="pop-over-img" />
+        <img id="gameOver" src="game_over.png" class="pop-over-img" />
         <div
           style="
             justify-content: center;
@@ -210,22 +177,8 @@
           "
         >
           <div>
-            <div id="finalScore" style="font-size: 50px"></div>
-            <button
-              title="spacebar"
-              onclick="startGame()"
-              style="
-                cursor: pointer;
-                height: 30px;
-                width: 150px;
-                border-color: #584963;
-                border-radius: 30px;
-                box-shadow: none;
-                color: white;
-                background-color: #5a3973;
-                margin-bottom: 10px;
-              "
-            >
+            <div id="finalScore" style="font-size: 2.5em"></div>
+            <button class="start-button" title="spacebar" onclick="startGame()">
               START AGAIN</button
             ><br />
             <input
@@ -246,8 +199,8 @@
     newHighScore = false;
     score = 0;
     best = 0;
-    arenaWidth = 75;
-    arenaHeight = 40;
+    arenaWidth = isMobileScreen() ? 50 : 75;
+    arenaHeight = isMobileScreen() ? 30 : 40;
     setArenaSize();
 
     function isMobileScreen() {
@@ -621,12 +574,14 @@
     }
 
     function setArenaSize() {
-      blockSize = Math.floor(
-        Math.min(
-          (window.innerWidth - 20) / arenaWidth,
-          (window.innerHeight - 115) / arenaHeight
-        )
-      );
+      blockSize = isMobileScreen()
+        ? Math.floor((window.innerWidth - 4) / arenaWidth)
+        : Math.floor(
+            Math.min(
+              (window.innerWidth - 20) / arenaWidth,
+              (window.innerHeight - 115) / arenaHeight
+            )
+          );
       borderSize = Math.max(Math.floor(blockSize / 4), 1);
       board.style.width = `${arenaWidth * blockSize}`;
       board.style.height = `${arenaHeight * blockSize}`;
@@ -635,15 +590,11 @@
     function endScreen() {
       document.getElementById("finalScore").innerText = `${score}`;
       if (newHighScore) {
-        document.getElementById("highScore").style.width = "300px";
-        document.getElementById("highScore").style.height = "300px";
-        document.getElementById("gameOver").style.width = "0px";
-        document.getElementById("gameOver").style.width = "0px";
+        document.getElementById("highScore").style.display = "flex";
+        document.getElementById("gameOver").style.display = "none";
       } else {
-        document.getElementById("highScore").style.width = "0px";
-        document.getElementById("highScore").style.height = "0px";
-        document.getElementById("gameOver").style.width = "300px";
-        document.getElementById("gameOver").style.height = "300px";
+        document.getElementById("highScore").style.display = "none";
+        document.getElementById("gameOver").style.display = "flex";
       }
       endOverlay.style.visibility = "visible";
       moving = false;
@@ -654,11 +605,9 @@
       discoMode = !discoMode;
       document.getElementById("discoToggle").checked = discoMode;
       discoSlug = document.getElementById("discoSlug");
-      discoSlug.style.width = discoMode ? "300px" : "0px";
-      discoSlug.style.height = discoMode ? "300px" : "0px";
+      discoSlug.style.display = discoMode ? "flex" : "none";
       sadSlug = document.getElementById("sadSlug");
-      sadSlug.style.width = discoMode ? "0px" : "300px";
-      sadSlug.style.height = discoMode ? "0px" : "300px";
+      sadSlug.style.display = discoMode ? "none" : "flex";
       if (!discoMode) {
         document.getElementById("b").style.color = "#e0dae7";
         document.getElementById("e").style.color = "#e0dae7";
