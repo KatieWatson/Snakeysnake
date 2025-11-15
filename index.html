@@ -465,8 +465,9 @@
       const touch = event.touches[event.touches.length - 1];
       const clientX = touch.clientX;
       const clientY = touch.clientY;
-      const xInsideElement = clientX - dPadRect.left;
+      const xInsideElement = clientX - dPadRect.left - dPad.width / 2;
       const yInsideElement = clientY - dPadRect.top - dPad.height / 2;
+      console.log(xInsideElement, yInsideElement);
 
       if (Math.abs(yInsideElement - xInsideElement) < 10) return;
       if (Math.abs(xInsideElement) > Math.abs(yInsideElement)) {
