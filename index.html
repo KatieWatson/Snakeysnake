@@ -493,6 +493,7 @@
           dPad.width / 7
       ) {
         lastTouchStartInCenter = new Date().getTime();
+        return;
       }
 
       if (Math.abs(yInsideElement - xInsideElement) < 10) return;
