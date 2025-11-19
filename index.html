@@ -244,9 +244,13 @@
   </body>
   <script>
     discoMode = true;
+    lastTouchStartInCenter = 0;
     newHighScore = false;
     score = 0;
-    best = 0;
+    best = localStorage.getItem("best")
+      ? parseInt(localStorage.getItem("best"))
+      : 0;
+    document.getElementById("best").innerText = best;
     arenaWidth = isMobileScreen() ? 50 : 75;
     arenaHeight = isMobileScreen() ? 30 : 40;
     setArenaSize();
@@ -454,6 +458,7 @@
         if (score > best) {
           newHighScore = true;
           best = score;
+          localStorage.setItem("best", best);
           document.getElementById("best").innerText = best;
           document.getElementById("bestScore").style.display = "none";
           document.getElementById("bestBanner").style.display = "inline";
