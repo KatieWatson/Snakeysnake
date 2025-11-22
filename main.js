@@ -8,6 +8,7 @@ let best = localStorage.getItem(isMobileScreen() ? "mobileBest" : "best") ?
 document.getElementById("best").innerText = best;
 let arenaWidth = isMobileScreen() ? 50 : 75;
 let arenaHeight = isMobileScreen() ? 30 : 40;
+const board = document.getElementById("board");
 setArenaSize();
 
 function isMobileScreen() {
@@ -57,7 +58,6 @@ let step = setInterval(
     isMobileScreen() ? 100 : 75
 );
 
-const board = document.getElementById("board");
 board.style.width = `${arenaWidth * blockSize}`;
 board.style.height = `${arenaHeight * blockSize}`;
 
