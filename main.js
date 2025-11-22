@@ -13,6 +13,7 @@ const overlay = document.getElementById("start-screen-overlay");
 const endOverlay = document.getElementById("end-screen-overlay");
 let z = 3;
 let blockSize = -1;
+let borderSize = -1;
 setArenaSize();
 
 const dPad = document.getElementById("dPad");
@@ -412,7 +413,7 @@ function setArenaSize() {
                 (window.innerHeight - 115) / arenaHeight
             )
         );
-    let borderSize = Math.max(Math.floor(blockSize / 4), 1);
+    borderSize = Math.max(Math.floor(blockSize / 4), 1);
     board.style.width = `${arenaWidth * blockSize}`;
     board.style.height = `${arenaHeight * blockSize}`;
 }
