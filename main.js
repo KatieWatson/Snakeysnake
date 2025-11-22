@@ -1,13 +1,13 @@
-discoMode = true;
-lastTouchStartInCenter = 0;
-newHighScore = false;
-score = 0;
-best = localStorage.getItem(isMobileScreen() ? "mobileBest" : "best") ?
+let discoMode = true;
+let lastTouchStartInCenter = 0;
+let newHighScore = false;
+let score = 0;
+let best = localStorage.getItem(isMobileScreen() ? "mobileBest" : "best") ?
     parseInt(localStorage.getItem(isMobileScreen() ? "mobileBest" : "best")) :
     0;
 document.getElementById("best").innerText = best;
-arenaWidth = isMobileScreen() ? 50 : 75;
-arenaHeight = isMobileScreen() ? 30 : 40;
+let arenaWidth = isMobileScreen() ? 50 : 75;
+let arenaHeight = isMobileScreen() ? 30 : 40;
 setArenaSize();
 
 function isMobileScreen() {
@@ -37,37 +37,37 @@ snake = [
     [centerX, centerY],
     [centerX, centerY + 1],
 ];
-foodPosition = [];
-turnQueue = [];
-border = [];
-snakeObjects = [];
+let foodPosition = [];
+let turnQueue = [];
+let border = [];
+let snakeObjects = [];
 
-gradientCount = 10;
-colors = makeColorSequence(gradientCount);
-currentColor = 0;
-direction = "u";
-growCount = 0;
+let gradientCount = 10;
+let colors = makeColorSequence(gradientCount);
+let currentColor = 0;
+let direction = "u";
+let growCount = 0;
 
-activeGame = false;
-moving = false;
-step = setInterval(
+let activeGame = false;
+let moving = false;
+let step = setInterval(
     function() {
         moveSnake();
     },
     isMobileScreen() ? 100 : 75
 );
 
-board = document.getElementById("board");
+let board = document.getElementById("board");
 board.style.width = `${arenaWidth * blockSize}`;
 board.style.height = `${arenaHeight * blockSize}`;
 
 overlay = document.getElementById("start-screen-overlay");
 endOverlay = document.getElementById("end-screen-overlay");
 
-z = 3;
+let z = 3;
 
 function listIncludesPoint(pointsList, point) {
-    for (var i = 0; i < pointsList.length; i++) {
+    for (let i = 0; i < pointsList.length; i++) {
         if (pointsList[i][0] == point[0] && pointsList[i][1] == point[1]) {
             return true;
         }
@@ -76,7 +76,7 @@ function listIncludesPoint(pointsList, point) {
 }
 
 function drawSquare(color, position, isBorder) {
-    square = document.createElement("div");
+    let square = document.createElement("div");
     board.appendChild(square);
     square.style.width = isBorder ?
         `${blockSize + borderSize * 2}` :
@@ -98,7 +98,7 @@ function drawSquare(color, position, isBorder) {
 }
 
 function moveSquare(id, position) {
-    square = document.getElementById(id);
+    let square = document.getElementById(id);
     square.style.width = `${blockSize}`;
     square.style.height = `${blockSize}`;
     square.style.visibility = "visible";
@@ -109,36 +109,33 @@ function moveSquare(id, position) {
 }
 
 function setFood() {
-    x = ~~(Math.random() * arenaWidth);
-    y = ~~(Math.random() * arenaHeight);
+    let x = ~~(Math.random() * arenaWidth);
+    let y = ~~(Math.random() * arenaHeight);
     while (listIncludesPoint(snake, [x, y])) {
         x = ~~(Math.random() * arenaWidth);
         y = ~~(Math.random() * arenaHeight);
     }
-    foodPosition = [x, y];
-    moveSquare("food", foodPosition);
+    moveSquare("food", [x, y]);
 }
 
 function drawWholeSnake() {
-    for (var i = 0; i < snake.length; i++) {
-        segmentBorder = drawSquare("white", snake[i], discoMode);
-        border.push(segmentBorder);
+    for (let i = 0; i < snake.length; i++) {
+        border.push(drawSquare("white", snake[i], discoMode));
     }
     if (discoMode) {
-        for (var i = 0; i < snake.length; i++) {
-            snakeSegment = drawSquare(colors[currentColor], snake[i], false);
-            snakeObjects.push(snakeSegment);
+        for (let i = 0; i < snake.length; i++) {
+            snakeObjects.push(drawSquare(colors[currentColor], snake[i], false));
         }
     }
     z++;
 }
 
 function makeColorSequence(gradientCount) {
-    hues = [0, 30, 57, 100, 200, 270, 290];
-    finalHues = [];
-    darker = true;
-    for (var i = 0; i < hues.length; i++) {
-        for (var j = 1; j <= gradientCount; j++) {
+    let hues = [0, 30, 57, 100, 200, 270, 290];
+    let finalHues = [];
+    let darker = true;
+    for (let i = 0; i < hues.length; i++) {
+        for (let j = 1; j <= gradientCount; j++) {
             // 85 - 45
             if (darker) {
                 finalHues.push(
@@ -152,8 +149,8 @@ function makeColorSequence(gradientCount) {
         }
         darker = !darker;
     }
-    for (var i = 0; i < hues.length; i++) {
-        for (var j = 1; j <= gradientCount; j++) {
+    for (let i = 0; i < hues.length; i++) {
+        for (let j = 1; j <= gradientCount; j++) {
             // 85 - 45
             if (darker) {
                 finalHues.push(
@@ -250,11 +247,11 @@ function moveSnake() {
         border.pop();
         snakeObjects.pop();
     }
-    for (var i = 0; i < border.length; i++) {
+    for (let i = 0; i < border.length; i++) {
         border[i].style.zIndex = z;
     }
     z++;
-    for (var i = 0; i < snakeObjects.length; i++) {
+    for (let i = 0; i < snakeObjects.length; i++) {
         snakeObjects[i].style.zIndex = z;
         snakeObjects[i].style.backgroundColor = colors[currentColor];
     }
@@ -406,7 +403,7 @@ function startGame() {
 window.startGame = startGame;
 
 function setArenaSize() {
-    blockSize = isMobileScreen() ?
+    let blockSize = isMobileScreen() ?
         Math.floor((window.innerWidth - 4) / arenaWidth) :
         Math.floor(
             Math.min(
@@ -414,7 +411,7 @@ function setArenaSize() {
                 (window.innerHeight - 115) / arenaHeight
             )
         );
-    borderSize = Math.max(Math.floor(blockSize / 4), 1);
+    let borderSize = Math.max(Math.floor(blockSize / 4), 1);
     board.style.width = `${arenaWidth * blockSize}`;
     board.style.height = `${arenaHeight * blockSize}`;
 }
@@ -438,9 +435,9 @@ function endScreen() {
 function toggleDisco() {
     discoMode = !discoMode;
     document.getElementById("discoToggle").checked = discoMode;
-    discoSlug = document.getElementById("discoSlug");
+    let discoSlug = document.getElementById("discoSlug");
     discoSlug.style.display = discoMode ? "flex" : "none";
-    sadSlug = document.getElementById("sadSlug");
+    let sadSlug = document.getElementById("sadSlug");
     sadSlug.style.display = discoMode ? "none" : "flex";
     if (!discoMode) {
         document.getElementById("b").style.color = "#e0dae7";
