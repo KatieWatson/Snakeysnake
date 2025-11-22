@@ -1,4 +1,4 @@
-let discoMode = true;
+var discoMode = true;
 let lastTouchStartInCenter = 0;
 let newHighScore = false;
 let score = 0;
