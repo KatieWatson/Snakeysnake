@@ -57,7 +57,7 @@ let step = setInterval(
     isMobileScreen() ? 100 : 75
 );
 
-let board = document.getElementById("board");
+const board = document.getElementById("board");
 board.style.width = `${arenaWidth * blockSize}`;
 board.style.height = `${arenaHeight * blockSize}`;
 
