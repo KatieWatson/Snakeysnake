@@ -1,4 +1,4 @@
-var discoMode = true;
+let discoMode = true;
 let lastTouchStartInCenter = 0;
 let newHighScore = false;
 let score = 0;
@@ -27,9 +27,9 @@ if (isMobileScreen()) {
     mobileScore.style.display = "none";
 }
 
-centerX = ~~(arenaWidth / 2);
-centerY = ~~(arenaHeight / 2);
-snake = [
+let centerX = ~~(arenaWidth / 2);
+let centerY = ~~(arenaHeight / 2);
+let snake = [
     [centerX, centerY - 1],
     [centerX, centerY],
     [centerX, centerY + 1],
@@ -117,7 +117,8 @@ function setFood() {
         x = ~~(Math.random() * arenaWidth);
         y = ~~(Math.random() * arenaHeight);
     }
-    moveSquare("food", [x, y]);
+    foodPosition = [x, y];
+    moveSquare("food", foodPosition);
 }
 
 function drawWholeSnake() {
@@ -199,7 +200,6 @@ function moveSnake() {
             ].concat(snake);
             break;
     }
-
     // Check whether the snake got itself or hit a wall.
     if (
         listIncludesPoint(snake.slice(1), snake[0]) ||
@@ -225,7 +225,6 @@ function moveSnake() {
             document.getElementById("bestScore").style.display = "none";
             document.getElementById("bestBanner").style.display = "inline";
         }
-
         setFood();
     }
     border = [drawSquare("white", snake[0], discoMode)].concat(border);
