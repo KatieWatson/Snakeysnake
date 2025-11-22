@@ -9,16 +9,11 @@ document.getElementById("best").innerText = best;
 let arenaWidth = isMobileScreen() ? 50 : 75;
 let arenaHeight = isMobileScreen() ? 30 : 40;
 const board = document.getElementById("board");
-setArenaSize();
+const overlay = document.getElementById("start-screen-overlay");
+const endOverlay = document.getElementById("end-screen-overlay");
+let z = 3;
 
-function isMobileScreen() {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    return (
-        /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(
-            userAgent
-        ) || /android|ipad|playbook|silk/i.test(userAgent)
-    );
-}
+setArenaSize();
 
 const dPad = document.getElementById("dPad");
 const mobileScore = document.getElementById("mobileScore");
@@ -61,10 +56,16 @@ let step = setInterval(
 board.style.width = `${arenaWidth * blockSize}`;
 board.style.height = `${arenaHeight * blockSize}`;
 
-overlay = document.getElementById("start-screen-overlay");
-endOverlay = document.getElementById("end-screen-overlay");
 
-let z = 3;
+
+function isMobileScreen() {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    return (
+        /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(
+            userAgent
+        ) || /android|ipad|playbook|silk/i.test(userAgent)
+    );
+}
 
 function listIncludesPoint(pointsList, point) {
     for (let i = 0; i < pointsList.length; i++) {
