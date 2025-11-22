@@ -247,8 +247,8 @@
     lastTouchStartInCenter = 0;
     newHighScore = false;
     score = 0;
-    best = localStorage.getItem("best")
-      ? parseInt(localStorage.getItem("best"))
+    best = localStorage.getItem(isMobileScreen() ? "mobileBest" : "best")
+      ? parseInt(localStorage.getItem(isMobileScreen() ? "mobileBest" : "best"))
       : 0;
     document.getElementById("best").innerText = best;
     arenaWidth = isMobileScreen() ? 50 : 75;
@@ -458,7 +458,7 @@
         if (score > best) {
           newHighScore = true;
           best = score;
-          localStorage.setItem("best", best);
+          localStorage.setItem(isMobileScreen() ? "mobileBest" : "best", best);
           document.getElementById("best").innerText = best;
           document.getElementById("bestScore").style.display = "none";
           document.getElementById("bestBanner").style.display = "inline";
