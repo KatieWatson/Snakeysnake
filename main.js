@@ -12,7 +12,7 @@ const board = document.getElementById("board");
 const overlay = document.getElementById("start-screen-overlay");
 const endOverlay = document.getElementById("end-screen-overlay");
 let z = 3;
-
+let blockSize = -1;
 setArenaSize();
 
 const dPad = document.getElementById("dPad");
@@ -404,7 +404,7 @@ function startGame() {
 window.startGame = startGame;
 
 function setArenaSize() {
-    let blockSize = isMobileScreen() ?
+    blockSize = isMobileScreen() ?
         Math.floor((window.innerWidth - 4) / arenaWidth) :
         Math.floor(
             Math.min(
