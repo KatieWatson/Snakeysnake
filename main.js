@@ -456,3 +456,4 @@ function toggleDisco() {
         document.getElementById("gameOver").style.display = "none";
     }
 }
+window.toggleDisco = toggleDisco;
