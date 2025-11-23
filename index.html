@@ -18,7 +18,6 @@
       }
 
       #food {
-        visibility: hidden;
         display: block;
         position: absolute;
         background-color: black;
@@ -193,14 +192,34 @@
                 START
               </button>
             </div>
-            <input
-              style="cursor: pointer"
-              id="discoToggle"
-              checked
-              onclick="toggleDisco()"
-              type="checkbox"
-            />
-            Disco Mode
+            <div>
+              Select Game Mode:<br />
+              <input
+                type="radio"
+                id="disco"
+                name="gameMode"
+                value="Disco Mode"
+                onclick="setGameMode(modes.disco)"
+                checked
+              />
+              <label for="disco">Disco</label><br />
+              <input
+                type="radio"
+                id="picture"
+                name="gameMode"
+                value="Picture Mode"
+                onclick="setGameMode(modes.picture)"
+              />
+              <label for="picture">Picture</label><br />
+              <input
+                type="radio"
+                id="plain"
+                name="gameMode"
+                value="Plain Mode"
+                onclick="setGameMode(modes.plain)"
+              />
+              <label for="plain">Plain</label>
+            </div>
           </div>
         </div>
       </div>
@@ -234,18 +253,38 @@
             <button class="start-button" title="spacebar" onclick="startGame()">
               START AGAIN</button
             ><br />
-            <input
-              style="cursor: pointer"
-              id="discoToggle"
-              checked
-              onclick="toggleDisco()"
-              type="checkbox"
-            />
-            Disco Mode
+            <div>
+              Select Game Mode:<br />
+              <input
+                type="radio"
+                id="disco"
+                name="gameMode2"
+                value="Disco Mode"
+                onclick="setGameMode(modes.disco)"
+              />
+              <label for="disco">Disco</label><br />
+              <input
+                type="radio"
+                id="picture"
+                name="gameMode2"
+                value="Picture Mode"
+                onclick="setGameMode(modes.picture)"
+              />
+              <label for="picture">Picture</label><br />
+              <input
+                type="radio"
+                id="plain"
+                name="gameMode2"
+                value="Plain Mode"
+                onclick="setGameMode(modes.plain)"
+              />
+              <label for="plain">Plain</label>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <canvas id="canvas" style="display: none"></canvas>
   </body>
   <script src="./main.js" type="module"></script>
 </html>

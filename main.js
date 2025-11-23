@@ -1,4 +1,16 @@
-let discoMode = true;
+import { drawPixel, getFullImage, isImageLoading, loadRandomImage } from "./picture_mode/picture_mode.js";
+
+export const modes = {
+    disco: "Disco Mode",
+    picture: "Picture Mode",
+    plain: "Plain Mode",
+}
+window.modes = modes;
+
+let coveredPositions = [];
+let imageRevealed = false;
+
+let currentMode = modes.disco;
 let lastTouchStartInCenter = 0;
 let newHighScore = false;
 let score = 0;
@@ -58,8 +70,30 @@ board.style.width = `${arenaWidth * blockSize}`;
 board.style.height = `${arenaHeight * blockSize}`;
 
 
+function setRadioValue(groupName, valueToSelect) {
+    const radioButtons = document.querySelectorAll(`input[name="${groupName}"]`);
+    radioButtons.forEach(radio => {
+        if (radio.value === valueToSelect) {
+            radio.checked = true;
+        } else {
+            radio.checked = false;
+        }
+    });
+}
 
-function isMobileScreen() {
+export function getGameMode() {
+    return currentMode;
+}
+window.getGameMode = getGameMode;
+
+export function setGameMode(mode) {
+    console.log("Setting game mode to:", mode);
+    currentMode = mode;
+    setRadioValue("gameMode2", mode);
+}
+window.setGameMode = setGameMode;
+
+export function isMobileScreen() {
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     return (
         /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(
@@ -77,7 +111,7 @@ function listIncludesPoint(pointsList, point) {
     return false;
 }
 
-function drawSquare(color, position, isBorder) {
+export function drawSquare(color, position, isBorder) {
     let square = document.createElement("div");
     board.appendChild(square);
     square.style.width = isBorder ?
@@ -97,6 +131,10 @@ function drawSquare(color, position, isBorder) {
         `${position[0] * blockSize}`;
     square.style.zIndex = `${z}`;
     return square;
+}
+
+export function isDiscoMode() {
+    return currentMode == modes.disco;
 }
 
 function moveSquare(id, position) {
@@ -123,9 +161,9 @@ function setFood() {
 
 function drawWholeSnake() {
     for (let i = 0; i < snake.length; i++) {
-        border.push(drawSquare("white", snake[i], discoMode));
+        border.push(drawSquare("white", snake[i], isDiscoMode()));
     }
-    if (discoMode) {
+    if (isDiscoMode()) {
         for (let i = 0; i < snake.length; i++) {
             snakeObjects.push(drawSquare(colors[currentColor], snake[i], false));
         }
@@ -171,7 +209,7 @@ function makeColorSequence(gradientCount) {
 }
 
 function moveSnake() {
-    if (!moving || !activeGame) {
+    if (!moving || !activeGame || isImageLoading()) {
         return;
     }
     if (turnQueue.length > 0) {
@@ -227,8 +265,27 @@ function moveSnake() {
         }
         setFood();
     }
-    border = [drawSquare("white", snake[0], discoMode)].concat(border);
-    if (discoMode) {
+    if (currentMode == modes.picture) {
+        if (coveredPositions.length < arenaHeight * arenaWidth &&
+            !coveredPositions.includes(`${snake[0][0]},${snake[0][1]}`)) {
+            drawPixel(snake[0][0], snake[0][1]);
+            coveredPositions.push(`${snake[0][0]},${snake[0][1]}`);
+        }
+
+        if (coveredPositions.length >= arenaHeight * arenaWidth && imageRevealed == false) {
+            imageRevealed = true;
+            board.style.backgroundImage = `url('${getFullImage()}')`;
+            board.style.backgroundSize = "100% 100%";
+            board.innerHTML = "";
+            border = [];
+            drawWholeSnake();
+            drawSquare("black", foodPosition, false).id = "food";
+        }
+    }
+
+    border = [drawSquare("white", snake[0], isDiscoMode())].concat(border);
+
+    if (isDiscoMode()) {
         snakeObjects = [
             drawSquare(colors[currentColor], snake[0], false),
         ].concat(snakeObjects);
@@ -373,7 +430,14 @@ function changeDirection(code) {
 }
 
 function startGame() {
+    board.style.backgroundImage = "none";
+    if (currentMode == modes.picture) {
+        document.getElementById("food").style.border = "white solid 2px";
+    }
     setArenaSize();
+    loadRandomImage();
+    coveredPositions = [];
+    imageRevealed = false;
     newHighScore = false;
     score = 0;
     document.getElementById("score").innerText = score;
@@ -432,28 +496,3 @@ function endScreen() {
     moving = false;
     activeGame = false;
 }
-
-function toggleDisco() {
-    discoMode = !discoMode;
-    document.getElementById("discoToggle").checked = discoMode;
-    let discoSlug = document.getElementById("discoSlug");
-    discoSlug.style.display = discoMode ? "flex" : "none";
-    let sadSlug = document.getElementById("sadSlug");
-    sadSlug.style.display = discoMode ? "none" : "flex";
-    if (!discoMode) {
-        document.getElementById("b").style.color = "#e0dae7";
-        document.getElementById("e").style.color = "#e0dae7";
-        document.getElementById("s").style.color = "#e0dae7";
-        document.getElementById("t").style.color = "#e0dae7";
-        document.getElementById("sadSlug2").style.display = "flex";
-        document.getElementById("highScore").style.display = "none";
-        document.getElementById("discoSlug2").style.display = "none";
-        document.getElementById("gameOver").style.display = "none";
-    } else {
-        document.getElementById("sadSlug2").style.display = "none";
-        document.getElementById("highScore").style.display = "none";
-        document.getElementById("discoSlug2").style.display = "flex";
-        document.getElementById("gameOver").style.display = "none";
-    }
-}
-window.toggleDisco = toggleDisco;
