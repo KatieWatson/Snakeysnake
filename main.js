@@ -90,7 +90,6 @@ function setImages(selectedMode) {
         } else {
             image.style.display = "none";
         }
-        console.log(image);
     });
 }
 
@@ -100,7 +99,6 @@ export function getGameMode() {
 window.getGameMode = getGameMode;
 
 export function setGameMode(mode) {
-    console.log("Setting game mode to:", mode);
     currentMode = mode;
     setRadioValue("gameMode2", mode);
     setImages(mode);
