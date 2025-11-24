@@ -178,6 +178,7 @@ function setFood() {
     food.style.visibility = "visible";
     food.style.top = `${foodPosition[1] * blockSize - (isPictureMode() ? borderWidth : 0)}`;
     food.style.left = `${foodPosition[0] * blockSize - (isPictureMode() ? borderWidth : 0)}`;
+    food.style.zIndex = isPictureMode() ? 1000000 : z;
 }
 
 function drawWholeSnake() {
