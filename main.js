@@ -9,6 +9,8 @@ window.modes = modes;
 
 let coveredPositions = [];
 let imageRevealed = false;
+let stepsSinceFillingPixel = 0;
+let flashing = 0;
 
 let currentMode = modes.disco;
 let lastTouchStartInCenter = 0;
@@ -284,21 +286,37 @@ function moveSnake() {
         }
         setFood();
     }
-    if (currentMode == modes.picture) {
+    if (isPictureMode()) {
         if (coveredPositions.length < arenaHeight * arenaWidth &&
-            !coveredPositions.includes(`${snake[0][0]},${snake[0][1]}`)) {
+            !coveredPositions.includes(`${snake[0][0]},${snake[0][1]}`) &&
+            !imageRevealed) {
             drawPixel(snake[0][0], snake[0][1]);
+            stepsSinceFillingPixel = 0;
             coveredPositions.push(`${snake[0][0]},${snake[0][1]}`);
+        } else {
+            stepsSinceFillingPixel++;
+        }
+        if (stepsSinceFillingPixel > 150) {
+            flashing++;
+            if (flashing < 8) {
+                board.style.backgroundColor = "white";
+            } else if (flashing < 16) {
+                board.style.backgroundColor = "black";
+            } else {
+                stepsSinceFillingPixel = 0;
+                flashing = 0;
+                board.style.backgroundColor = "lightslategray";
+            }
         }
 
-        if (coveredPositions.length >= arenaHeight * arenaWidth && imageRevealed == false) {
+        if (coveredPositions.length >= arenaHeight * arenaWidth && !imageRevealed) {
             imageRevealed = true;
             board.style.backgroundImage = `url('${getFullImage()}')`;
             board.style.backgroundSize = "100% 100%";
             board.innerHTML = "";
             border = [];
             drawWholeSnake();
-            drawSquare("black", foodPosition, false).id = "food";
+            drawSquare("black", foodPosition, "food").id = "food";
         }
     }
 
@@ -448,7 +466,9 @@ function changeDirection(code) {
 
 function startGame() {
     board.style.backgroundImage = "none";
-    if (currentMode == modes.picture) {
+    stepsSinceFillingPixel = 0;
+    flashing = 0;
+    if (isPictureMode()) {
         document.getElementById("food").style.border = "white solid 2px";
     }
     setArenaSize();
@@ -505,6 +525,7 @@ function setArenaSize() {
 }
 
 function endScreen() {
+    board.style.backgroundColor = "lightslategray";
     document.getElementById("finalScore").innerText = `${score}`;
     setImages("");
     if (newHighScore) {
