@@ -25,7 +25,7 @@ const overlay = document.getElementById("start-screen-overlay");
 const endOverlay = document.getElementById("end-screen-overlay");
 let z = 3;
 let blockSize = -1;
-let borderSize = -1;
+let borderWidth = -1;
 setArenaSize();
 
 const dPad = document.getElementById("dPad");
@@ -123,25 +123,34 @@ function listIncludesPoint(pointsList, point) {
     return false;
 }
 
-export function drawSquare(color, position, isBorder) {
+export function drawSquare(color, position, type) {
+    let isBorder = type == "border";
+    let isFood = type == "food";
     let square = document.createElement("div");
     board.appendChild(square);
     square.style.width = isBorder ?
-        `${blockSize + borderSize * 2}` :
+        `${blockSize + borderWidth * 2}` :
         `${blockSize}`;
     square.style.height = isBorder ?
-        `${blockSize + borderSize * 2}` :
+        `${blockSize + borderWidth * 2}` :
         `${blockSize}`;
     square.style.backgroundColor = color;
     square.style.display = "block";
     square.style.position = "absolute";
-    square.style.top = isBorder ?
-        `${position[1] * blockSize - borderSize}` :
+    square.style.top = isBorder || (isFood && isPictureMode()) ?
+        `${position[1] * blockSize - borderWidth}` :
         `${position[1] * blockSize}`;
-    square.style.left = isBorder ?
-        `${position[0] * blockSize - borderSize}` :
+    square.style.left = isBorder || (isFood && isPictureMode()) ?
+        `${position[0] * blockSize - borderWidth}` :
         `${position[0] * blockSize}`;
-    square.style.zIndex = `${z}`;
+    if (!isFood || isDiscoMode()) {
+        square.style.zIndex = `${z}`;
+    }
+    if (isFood && isPictureMode()) {
+        square.style.border = `white solid ${borderWidth}px`;
+    } else {
+        square.style.border = "none";
+    }
     return square;
 }
 
@@ -149,15 +158,8 @@ export function isDiscoMode() {
     return currentMode == modes.disco;
 }
 
-function moveSquare(id, position) {
-    let square = document.getElementById(id);
-    square.style.width = `${blockSize}`;
-    square.style.height = `${blockSize}`;
-    square.style.visibility = "visible";
-    square.style.top = `${position[1] * blockSize}`;
-    square.style.left = `${position[0] * blockSize}`;
-    square.style.zIndex = `${z}`;
-    return square;
+export function isPictureMode() {
+    return currentMode == modes.picture;
 }
 
 function setFood() {
@@ -168,16 +170,21 @@ function setFood() {
         y = ~~(Math.random() * arenaHeight);
     }
     foodPosition = [x, y];
-    moveSquare("food", foodPosition);
+    let food = document.getElementById("food");
+    food.style.width = `${blockSize}`;
+    food.style.height = `${blockSize}`;
+    food.style.visibility = "visible";
+    food.style.top = `${foodPosition[1] * blockSize - (isPictureMode() ? borderWidth : 0)}`;
+    food.style.left = `${foodPosition[0] * blockSize - (isPictureMode() ? borderWidth : 0)}`;
 }
 
 function drawWholeSnake() {
     for (let i = 0; i < snake.length; i++) {
-        border.push(drawSquare("white", snake[i], isDiscoMode()));
+        border.push(drawSquare("white", snake[i], isDiscoMode() ? "border" : ""));
     }
     if (isDiscoMode()) {
         for (let i = 0; i < snake.length; i++) {
-            snakeObjects.push(drawSquare(colors[currentColor], snake[i], false));
+            snakeObjects.push(drawSquare(colors[currentColor], snake[i], ""));
         }
     }
     z++;
@@ -295,12 +302,10 @@ function moveSnake() {
         }
     }
 
-    border = [drawSquare("white", snake[0], isDiscoMode())].concat(border);
+    border.unshift(drawSquare("white", snake[0], isDiscoMode() ? "border" : ""));
 
     if (isDiscoMode()) {
-        snakeObjects = [
-            drawSquare(colors[currentColor], snake[0], false),
-        ].concat(snakeObjects);
+        snakeObjects.unshift(drawSquare(colors[currentColor], snake[0], ""));
         currentColor++;
         document.getElementById("b").style.color = colors[currentColor];
         document.getElementById("e").style.color = colors[currentColor - 2];
@@ -474,7 +479,13 @@ function startGame() {
     growCount = 0;
     moving = true;
     activeGame = true;
-    drawSquare("black", [0, 0], false).id = "food";
+    let food = drawSquare("black", foodPosition, "food");
+    food.id = "food";
+    if (isPictureMode()) {
+        food.style.border = `white solid ${borderWidth}px`;
+    } else {
+        food.style.border = "none";
+    }
     setFood();
 }
 window.startGame = startGame;
@@ -488,7 +499,7 @@ function setArenaSize() {
                 (window.innerHeight - 115) / arenaHeight
             )
         );
-    borderSize = Math.max(Math.floor(blockSize / 4), 1);
+    borderWidth = Math.max(Math.floor(blockSize / 4), 1);
     board.style.width = `${arenaWidth * blockSize}`;
     board.style.height = `${arenaHeight * blockSize}`;
 }
