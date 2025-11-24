@@ -81,6 +81,19 @@ function setRadioValue(groupName, valueToSelect) {
     });
 }
 
+function setImages(selectedMode) {
+    const images = Array.from(document.getElementsByClassName("pop-over-img"));
+
+    images.forEach(image => {
+        if (image.id === selectedMode) {
+            image.style.display = "block";
+        } else {
+            image.style.display = "none";
+        }
+        console.log(image);
+    });
+}
+
 export function getGameMode() {
     return currentMode;
 }
@@ -90,6 +103,7 @@ export function setGameMode(mode) {
     console.log("Setting game mode to:", mode);
     currentMode = mode;
     setRadioValue("gameMode2", mode);
+    setImages(mode);
 }
 window.setGameMode = setGameMode;
 
@@ -483,8 +497,7 @@ function setArenaSize() {
 
 function endScreen() {
     document.getElementById("finalScore").innerText = `${score}`;
-    document.getElementById("sadSlug2").style.display = "none";
-    document.getElementById("discoSlug2").style.display = "none";
+    setImages("");
     if (newHighScore) {
         document.getElementById("highScore").style.display = "flex";
         document.getElementById("gameOver").style.display = "none";
