@@ -11,6 +11,8 @@ let coveredPositions = [];
 let imageRevealed = false;
 let stepsSinceFillingPixel = 0;
 let flashing = 0;
+let flashFood = false;
+let flashFoodCount = 0;
 
 let currentMode = modes.disco;
 let lastTouchStartInCenter = 0;
@@ -22,7 +24,7 @@ let best = localStorage.getItem(isMobileScreen() ? "mobileBest" : "best") ?
 document.getElementById("best").innerText = best;
 let arenaWidth = isMobileScreen() ? 50 : 75;
 let arenaHeight = isMobileScreen() ? 30 : 40;
-const board = document.getElementById("board");
+const arena = document.getElementById("arena");
 const overlay = document.getElementById("start-screen-overlay");
 const endOverlay = document.getElementById("end-screen-overlay");
 let z = 3;
@@ -68,8 +70,8 @@ let step = setInterval(
     isMobileScreen() ? 100 : 75
 );
 
-board.style.width = `${arenaWidth * blockSize}`;
-board.style.height = `${arenaHeight * blockSize}`;
+arena.style.width = `${arenaWidth * blockSize}`;
+arena.style.height = `${arenaHeight * blockSize}`;
 
 
 function setRadioValue(groupName, valueToSelect) {
@@ -129,7 +131,7 @@ export function drawSquare(color, position, type) {
     let isBorder = type == "border";
     let isFood = type == "food";
     let square = document.createElement("div");
-    board.appendChild(square);
+    arena.appendChild(square);
     square.style.width = isBorder ?
         `${blockSize + borderWidth * 2}` :
         `${blockSize}`;
@@ -231,6 +233,14 @@ function makeColorSequence(gradientCount) {
 }
 
 function moveSnake() {
+    if (flashFood) {
+        flashFoodCount++;
+        if (flashFoodCount < 8) {
+            document.getElementById("food").style.backgroundColor = "white";
+        } else if (flashFoodCount < 16) {
+            document.getElementById("food").style.backgroundColor = "black";
+        } else { flashFoodCount = 0; }
+    }
     if (!moving || !activeGame || isImageLoading()) {
         return;
     }
@@ -300,21 +310,21 @@ function moveSnake() {
         if (stepsSinceFillingPixel > 150) {
             flashing++;
             if (flashing < 8) {
-                board.style.backgroundColor = "white";
+                arena.style.backgroundColor = "white";
             } else if (flashing < 16) {
-                board.style.backgroundColor = "black";
+                arena.style.backgroundColor = "black";
             } else {
                 stepsSinceFillingPixel = 0;
                 flashing = 0;
-                board.style.backgroundColor = "lightslategray";
+                arena.style.backgroundColor = "lightslategray";
             }
         }
 
         if (coveredPositions.length >= arenaHeight * arenaWidth && !imageRevealed) {
             imageRevealed = true;
-            board.style.backgroundImage = `url('${getFullImage()}')`;
-            board.style.backgroundSize = "100% 100%";
-            board.innerHTML = "";
+            arena.style.backgroundImage = `url('${getFullImage()}')`;
+            arena.style.backgroundSize = "100% 100%";
+            arena.innerHTML = "";
             border = [];
             drawWholeSnake();
             drawSquare("black", foodPosition, "food").id = "food";
@@ -330,6 +340,23 @@ function moveSnake() {
         document.getElementById("e").style.color = colors[currentColor - 2];
         document.getElementById("s").style.color = colors[currentColor - 4];
         document.getElementById("t").style.color = colors[currentColor - 6];
+        if (coveredPositions.length < arenaHeight * arenaWidth &&
+            !coveredPositions.includes(`${snake[0][0]},${snake[0][1]}`) &&
+            !imageRevealed) {
+            coveredPositions.push(`${snake[0][0]},${snake[0][1]}`);
+        }
+        if (coveredPositions.length >= arenaHeight * arenaWidth &&
+            !imageRevealed) {
+            imageRevealed = true;
+            arena.style.backgroundImage = `url('winner.jpg')`;
+            arena.style.backgroundSize = "100% 100%";
+            arena.innerHTML = "";
+            border = [];
+            snakeObjects = [];
+            drawWholeSnake();
+            drawSquare("black", foodPosition, "food").id = "food";
+            flashFood = true;
+        }
     }
 
     // Delete the tail if not growing.1
@@ -337,7 +364,7 @@ function moveSnake() {
         growCount--;
     } else {
         snake.pop();
-        board.removeChild(border[border.length - 1]);
+        arena.removeChild(border[border.length - 1]);
         border.pop();
         snakeObjects.pop();
     }
@@ -466,9 +493,11 @@ function changeDirection(code) {
 }
 
 function startGame() {
-    board.style.backgroundImage = "none";
+    arena.style.backgroundImage = "none";
     stepsSinceFillingPixel = 0;
     flashing = 0;
+    flashFood = false;
+    flashFoodCount = 0;
     if (isPictureMode()) {
         document.getElementById("food").style.border = "white solid 2px";
     }
@@ -488,7 +517,7 @@ function startGame() {
     turnQueue = [];
     border = [];
     snakeObjects = [];
-    board.innerHTML = "";
+    arena.innerHTML = "";
     snake = [
         [centerX, centerY - 1],
         [centerX, centerY],
@@ -521,12 +550,12 @@ function setArenaSize() {
             )
         );
     borderWidth = Math.max(Math.floor(blockSize / 4), 1);
-    board.style.width = `${arenaWidth * blockSize}`;
-    board.style.height = `${arenaHeight * blockSize}`;
+    arena.style.width = `${arenaWidth * blockSize}`;
+    arena.style.height = `${arenaHeight * blockSize}`;
 }
 
 function endScreen() {
-    board.style.backgroundColor = "lightslategray";
+    arena.style.backgroundColor = "lightslategray";
     document.getElementById("finalScore").innerText = `${score}`;
     setImages("");
     if (newHighScore) {
