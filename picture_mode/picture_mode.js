@@ -3,7 +3,6 @@ const images = ["cabin", "california", "cows", "lilies", "olive_trees", "starry"
 let pixels = [];
 let image = "";
 let imageLoading = false;
-let i = -1;
 
 export function getFullImage() {
     return `./picture_mode/${image}_full.jpg`;
@@ -14,9 +13,7 @@ export function isImageLoading() {
 }
 
 export function loadRandomImage() {
-    i++;
-    image = images[i % images.length];
-    // image = images[Math.floor(Math.random() * images.length)];
+    image = images[Math.floor(Math.random() * images.length)];
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.src = `./picture_mode/${image}${isMobileScreen()? "_mobile": ""}.jpg`;
