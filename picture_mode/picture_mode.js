@@ -1,5 +1,5 @@
 import { drawSquare, isMobileScreen } from "../main.js";
-const images = ["cabin", "california", "cows", "lilies", "olive_trees", "starry", "stream", "wave", "wheat", "willows", "yosemite"];
+const images = ["california", "cows", "lilies", "olive_trees", "starry", "stream", "wave", "wheat", "willows", "yosemite"];
 let pixels = [];
 let image = "";
 let imageLoading = false;
