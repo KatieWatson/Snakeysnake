@@ -1,9 +1,11 @@
+import { drawOldSnakeObstacles } from "./picture_mode/old_snakey.js";
 import { drawPixel, getFullImage, isImageLoading, loadRandomImage } from "./picture_mode/picture_mode.js";
 
 export const modes = {
     disco: "Disco Mode",
     picture: "Picture Mode",
     plain: "Plain Mode",
+    oldSnakey: "Old Snakey"
 }
 window.modes = modes;
 
@@ -63,6 +65,9 @@ let growCount = 0;
 
 let activeGame = false;
 let moving = false;
+
+let obstacles = [];
+
 let step = setInterval(
     function() {
         moveSnake();
@@ -109,6 +114,10 @@ export function setGameMode(mode) {
 }
 window.setGameMode = setGameMode;
 
+export function getArenaDimensions() {
+    return { width: arenaWidth, height: arenaHeight };
+}
+
 export function isMobileScreen() {
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     return (
@@ -130,22 +139,29 @@ function listIncludesPoint(pointsList, point) {
 export function drawSquare(color, position, type) {
     let isBorder = type == "border";
     let isFood = type == "food";
+    let isObstacle = type == "obstacle";
     let square = document.createElement("div");
     arena.appendChild(square);
     square.style.width = isBorder ?
         `${blockSize + borderWidth * 2}` :
+        isOldSnakeyMode() ? `${blockSize - borderWidth}` :
         `${blockSize}`;
     square.style.height = isBorder ?
         `${blockSize + borderWidth * 2}` :
+        isOldSnakeyMode() ? `${blockSize - borderWidth}` :
         `${blockSize}`;
     square.style.backgroundColor = color;
     square.style.display = "block";
     square.style.position = "absolute";
     square.style.top = isBorder || (isFood && isPictureMode()) ?
         `${position[1] * blockSize - borderWidth}` :
+        isOldSnakeyMode() ?
+        `${position[1] * blockSize + borderWidth/2}` :
         `${position[1] * blockSize}`;
     square.style.left = isBorder || (isFood && isPictureMode()) ?
         `${position[0] * blockSize - borderWidth}` :
+        isOldSnakeyMode() ?
+        `${position[0] * blockSize + borderWidth/2}` :
         `${position[0] * blockSize}`;
     if (!isFood || isDiscoMode()) {
         square.style.zIndex = `${z}`;
@@ -155,11 +171,18 @@ export function drawSquare(color, position, type) {
     } else {
         square.style.border = "none";
     }
+    if (isObstacle) {
+        obstacles.push(`(${position[0]}, ${position[1]})`);
+    }
     return square;
 }
 
 export function isDiscoMode() {
     return currentMode == modes.disco;
+}
+
+export function isOldSnakeyMode() {
+    return currentMode == modes.oldSnakey;
 }
 
 export function isPictureMode() {
@@ -169,23 +192,30 @@ export function isPictureMode() {
 function setFood() {
     let x = ~~(Math.random() * arenaWidth);
     let y = ~~(Math.random() * arenaHeight);
-    while (listIncludesPoint(snake, [x, y])) {
+    while (listIncludesPoint(snake, [x, y]) ||
+        !(!isOldSnakeyMode() ||
+            !obstacles.includes(`(${x}, ${y})`))) {
         x = ~~(Math.random() * arenaWidth);
         y = ~~(Math.random() * arenaHeight);
     }
     foodPosition = [x, y];
     let food = document.getElementById("food");
-    food.style.width = `${blockSize}`;
-    food.style.height = `${blockSize}`;
+    food.style.width = isOldSnakeyMode() ? `${blockSize - borderWidth}` : `${blockSize}`;
+    food.style.height = isOldSnakeyMode() ? `${blockSize - borderWidth}` : `${blockSize}`;
     food.style.visibility = "visible";
-    food.style.top = `${foodPosition[1] * blockSize - (isPictureMode() ? borderWidth : 0)}`;
-    food.style.left = `${foodPosition[0] * blockSize - (isPictureMode() ? borderWidth : 0)}`;
+    const modifier = isPictureMode() ?
+        -1 * borderWidth :
+        isOldSnakeyMode() ?
+        0.5 * borderWidth :
+        0;
+    food.style.top = `${foodPosition[1] * blockSize + modifier}`;
+    food.style.left = `${foodPosition[0] * blockSize + modifier}`;
     food.style.zIndex = isPictureMode() ? 1000000 : z;
 }
 
 function drawWholeSnake() {
     for (let i = 0; i < snake.length; i++) {
-        border.push(drawSquare("white", snake[i], isDiscoMode() ? "border" : ""));
+        border.push(drawSquare(isOldSnakeyMode() ? "black" : "white", snake[i], isDiscoMode() ? "border" : ""));
     }
     if (isDiscoMode()) {
         for (let i = 0; i < snake.length; i++) {
@@ -276,8 +306,8 @@ function moveSnake() {
         snake[0][0] < 0 ||
         snake[0][0] > arenaWidth - 1 ||
         snake[0][1] < 0 ||
-        snake[0][1] > arenaHeight - 1
-    ) {
+        snake[0][1] > arenaHeight - 1 ||
+        obstacles.includes(`(${snake[0][0]}, ${snake[0][1]})`)) {
         endScreen();
         return;
     }
@@ -331,7 +361,7 @@ function moveSnake() {
         }
     }
 
-    border.unshift(drawSquare("white", snake[0], isDiscoMode() ? "border" : ""));
+    border.unshift(drawSquare(isOldSnakeyMode() ? "black" : "white", snake[0], isDiscoMode() ? "border" : ""));
 
     if (isDiscoMode()) {
         snakeObjects.unshift(drawSquare(colors[currentColor], snake[0], ""));
@@ -354,7 +384,7 @@ function moveSnake() {
             border = [];
             snakeObjects = [];
             drawWholeSnake();
-            drawSquare("black", foodPosition, "food").id = "food";
+            drawSquare(isOldSnakeyMode() ? "green" : "black", foodPosition, "food").id = "food";
             flashFood = true;
         }
     }
@@ -493,7 +523,9 @@ function changeDirection(code) {
 }
 
 function startGame() {
+    obstacles = [];
     arena.style.backgroundImage = "none";
+    arena.style.backgroundColor = isOldSnakeyMode() ? "white" : "lightslategray";
     stepsSinceFillingPixel = 0;
     flashing = 0;
     flashFood = false;
@@ -523,13 +555,15 @@ function startGame() {
         [centerX, centerY],
         [centerX, centerY + 1],
     ];
-
+    if (isOldSnakeyMode()) {
+        drawOldSnakeObstacles();
+    }
     drawWholeSnake();
     direction = "u";
     growCount = 0;
     moving = true;
     activeGame = true;
-    let food = drawSquare("black", foodPosition, "food");
+    let food = drawSquare(isOldSnakeyMode() ? "green" : "black", foodPosition, "food");
     food.id = "food";
     if (isPictureMode()) {
         food.style.border = `white solid ${borderWidth}px`;
@@ -555,7 +589,6 @@ function setArenaSize() {
 }
 
 function endScreen() {
-    arena.style.backgroundColor = "lightslategray";
     document.getElementById("finalScore").innerText = `${score}`;
     setImages("");
     if (newHighScore) {

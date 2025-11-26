@@ -21,8 +21,6 @@
         display: block;
         position: absolute;
         background-color: black;
-        height: 8px;
-        width: 8px;
         z-index: 1000000;
       }
 
@@ -144,9 +142,7 @@
       DISCO JERRY'S SNAKEY SNAKE GAME
     </div>
     <div style="width: fit-content; margin-inline: auto">
-      <div id="arena">
-        <div id="food"></div>
-      </div>
+      <div id="arena"></div>
       <span>Score:</span>
       <span id="score">0</span>
       <span id="bestScore" style="margin-left: 10px">
@@ -171,6 +167,12 @@
         <img
           id="Picture Mode"
           src="picture_slug.png"
+          class="pop-over-img"
+          style="display: none"
+        />
+        <img
+          id="Old Snakey"
+          src="old_snakey_slug.png"
           class="pop-over-img"
           style="display: none"
         />
@@ -219,6 +221,14 @@
               <label for="picture">Picture</label><br />
               <input
                 type="radio"
+                id="oldSnakey"
+                name="gameMode"
+                value="Old Snakey"
+                onclick="setGameMode(modes.oldSnakey)"
+              />
+              <label for="oldSnakey">Old Snakey</label><br />
+              <input
+                type="radio"
                 id="plain"
                 name="gameMode"
                 value="Plain Mode"
@@ -244,6 +254,12 @@
         <img
           id="Picture Mode"
           src="picture_slug.png"
+          class="pop-over-img"
+          style="display: none"
+        />
+        <img
+          id="Old Snakey"
+          src="old_snakey_slug.png"
           class="pop-over-img"
           style="display: none"
         />
@@ -284,6 +300,14 @@
                 onclick="setGameMode(modes.picture)"
               />
               <label for="picture">Picture</label><br />
+              <input
+                type="radio"
+                id="oldSnakey"
+                name="gameMode2"
+                value="Old Snakey"
+                onclick="setGameMode(modes.oldSnakey)"
+              />
+              <label for="oldSnakey">Old Snakey</label><br />
               <input
                 type="radio"
                 id="plain"
