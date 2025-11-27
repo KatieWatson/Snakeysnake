@@ -302,7 +302,7 @@ function moveSnake() {
     }
     // Check whether the snake got itself or hit a wall.
     if (
-        listIncludesPoint(snake.slice(1), snake[0]) ||
+        listIncludesPoint(snake.slice(1, -1), snake[0]) ||
         snake[0][0] < 0 ||
         snake[0][0] > arenaWidth - 1 ||
         snake[0][1] < 0 ||
