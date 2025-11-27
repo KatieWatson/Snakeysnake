@@ -530,9 +530,6 @@ function startGame() {
     flashing = 0;
     flashFood = false;
     flashFoodCount = 0;
-    if (isPictureMode()) {
-        document.getElementById("food").style.border = "white solid 2px";
-    }
     setArenaSize();
     loadRandomImage();
     coveredPositions = [];
