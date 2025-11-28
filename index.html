@@ -7,6 +7,10 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no"
     />
     <style>
+      label {
+        cursor: pointer;
+      }
+
       #arena {
         border: #e0dae7;
         border-width: 3px;
@@ -45,6 +49,7 @@
       }
 
       .popover {
+        overflow: hidden;
         width: 80%;
         max-width: 300px;
         background-color: white;
@@ -52,12 +57,15 @@
         position: absolute;
         border-radius: 90px;
         display: flex;
-        padding: 5px;
         left: 0;
         right: 0;
         margin-inline: auto;
-        width: fit-content;
         flex-wrap: wrap;
+      }
+
+      .pop-over-img {
+        margin: 5px;
+        max-width: 290px;
       }
 
       .start-button {
@@ -73,16 +81,43 @@
         margin-bottom: 10px;
       }
 
-      @media (max-width: 600px) {
+      .gameModeDescription {
+        font-size: 0.7em;
+        margin-top: -2px;
+        margin-bottom: 2px;
+        padding-left: 31px;
+        max-width: 200px;
+        font-weight: normal;
+      }
+
+      .menuList {
+        overflow-y: scroll;
+        max-height: 125px;
+        scrollbar-width: thin;
+      }
+
+      label {
+        font-weight: bold;
+      }
+
+      #finalLabel {
+        padding-bottom: 35px;
+      }
+
+      @media (max-width: 800px) {
         .popover {
           top: 10%;
         }
+        .gameModeDescription {
+          max-width: 250px;
+        }
         .popover-text {
-          padding-bottom: 30px;
-          padding-inline: 20px;
+          padding-block: 3px;
+          width: -webkit-fill-available;
+          padding-left: 20px;
         }
         .pop-over-img {
-          width: 100%;
+          width: -webkit-fill-available;
           border-radius: 90px;
           display: flex;
         }
@@ -92,22 +127,31 @@
         #header {
           font-size: 1em;
         }
+        #padding-right-box {
+          padding-right: 20px;
+        }
       }
 
-      @media (min-width: 600px) {
+      @media (min-width: 800px) {
+        #padding-right-box {
+          padding-right: 5px;
+        }
         .popover {
           max-width: fit-content;
           top: 15%;
+          display: -webkit-box;
         }
         .popover-message {
-          max-width: 150px;
+          max-width: 220px;
           overflow-wrap: normal;
         }
         .popover-text {
           justify-content: center;
-          min-width: 200px;
+          padding-left: 5px;
+          padding-top: 50px;
           display: flex;
-          align-items: center;
+          flex-flow: column;
+          height: 100%;
         }
         .pop-over-img {
           width: 300px;
@@ -131,6 +175,7 @@
       background-color: #261736;
       color: #e0dae7;
       display: initial;
+      overflow: hidden;
     "
   >
     <div id="header">
@@ -184,57 +229,81 @@
         />
         <div class="popover-text">
           <div>
-            <div style="font-size: 2em; margin-top: 0.5em">WELCOME</div>
-            <div
-              class="popover-message"
-              style="font-size: 1em; padding-bottom: 7px"
-            >
-              to disco jerry's snakey snake arena
-            </div>
-            <div style="width: 100%; display: flex; align-items: center">
-              <button
-                title="spacebar"
-                onclick="startGame()"
-                class="start-button"
+            <div id="padding-right-box">
+              <div style="font-size: 2em">WELCOME</div>
+              <div
+                class="popover-message"
+                style="font-size: 0.8em; padding-bottom: 7px"
               >
-                START
-              </button>
+                to disco jerry's snakey snake arena
+              </div>
+              <div style="width: 100%; display: flex; align-items: center">
+                <button
+                  title="spacebar"
+                  onclick="startGame()"
+                  class="start-button"
+                >
+                  START
+                </button>
+              </div>
             </div>
             <div>
               Select Game Mode:<br />
-              <input
-                type="radio"
-                id="disco"
-                name="gameMode"
-                value="Disco Mode"
-                onclick="setGameMode(modes.disco)"
-                checked
-              />
-              <label for="disco">Disco</label><br />
-              <input
-                type="radio"
-                id="picture"
-                name="gameMode"
-                value="Picture Mode"
-                onclick="setGameMode(modes.picture)"
-              />
-              <label for="picture">Picture</label><br />
-              <input
-                type="radio"
-                id="oldSnakey"
-                name="gameMode"
-                value="Old Snakey"
-                onclick="setGameMode(modes.oldSnakey)"
-              />
-              <label for="oldSnakey">Old Snakey</label><br />
-              <input
-                type="radio"
-                id="plain"
-                name="gameMode"
-                value="Plain Mode"
-                onclick="setGameMode(modes.plain)"
-              />
-              <label for="plain">Plain</label>
+              <div class="menuList">
+                <input
+                  type="radio"
+                  id="disco"
+                  name="gameMode"
+                  value="Disco Mode"
+                  onclick="setGameMode(modes.disco)"
+                  checked
+                />
+                <label for="disco">
+                  Disco
+                  <p class="gameModeDescription">
+                    fill the board with dazzling designs
+                  </p>
+                </label>
+                <input
+                  type="radio"
+                  id="picture"
+                  name="gameMode"
+                  value="Picture Mode"
+                  onclick="setGameMode(modes.picture)"
+                />
+                <label for="picture">
+                  Picture
+                  <p class="gameModeDescription">
+                    uncover every pixel to reveal a hidden image
+                  </p>
+                </label>
+                <input
+                  type="radio"
+                  id="oldSnakey"
+                  name="gameMode"
+                  value="Old Snakey"
+                  onclick="setGameMode(modes.oldSnakey)"
+                />
+                <label for="oldSnakey">
+                  Old Snakey
+                  <p class="gameModeDescription">
+                    the game that inspired my snakey obsession
+                  </p>
+                </label>
+                <input
+                  type="radio"
+                  id="plain"
+                  name="gameMode"
+                  value="Plain Mode"
+                  onclick="setGameMode(modes.plain)"
+                />
+                <label for="plain" id="finalLabel">
+                  Plain
+                  <p class="gameModeDescription">
+                    why do we even have this mode?
+                  </p>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -271,18 +340,31 @@
         />
         <div class="popover-text">
           <div>
-            <div id="finalScore" style="font-size: 2.5em"></div>
-            <div
-              id="mobileScore"
-              style="font-size: 0.9em; margin-top: -0.4em; margin-bottom: 0.4em"
-            >
-              (mobile)
+            <div id="padding-right-box" style="padding-top: 14px">
+              <div id="finalScore" style="font-size: 2.5em"></div>
+              <div
+                id="mobileScore"
+                style="
+                  font-size: 0.9em;
+                  margin-top: -0.4em;
+                  margin-bottom: 0.4em;
+                "
+              >
+                (mobile)
+              </div>
+              <button
+                class="start-button"
+                title="spacebar"
+                onclick="startGame()"
+              >
+                START AGAIN
+              </button>
+              <br />
             </div>
-            <button class="start-button" title="spacebar" onclick="startGame()">
-              START AGAIN</button
-            ><br />
-            <div>
-              Select Game Mode:<br />
+          </div>
+          <div>
+            Select Game Mode:<br />
+            <div class="menuList">
               <input
                 type="radio"
                 id="disco"
@@ -291,7 +373,12 @@
                 onclick="setGameMode(modes.disco)"
                 checked
               />
-              <label for="disco">Disco</label><br />
+              <label for="disco">
+                Disco
+                <p class="gameModeDescription">
+                  fill the board with dazzling designs
+                </p>
+              </label>
               <input
                 type="radio"
                 id="picture"
@@ -299,7 +386,12 @@
                 value="Picture Mode"
                 onclick="setGameMode(modes.picture)"
               />
-              <label for="picture">Picture</label><br />
+              <label for="picture">
+                Picture
+                <p class="gameModeDescription">
+                  uncover every pixel to reveal a hidden image
+                </p>
+              </label>
               <input
                 type="radio"
                 id="oldSnakey"
@@ -307,7 +399,12 @@
                 value="Old Snakey"
                 onclick="setGameMode(modes.oldSnakey)"
               />
-              <label for="oldSnakey">Old Snakey</label><br />
+              <label for="oldSnakey">
+                Old Snakey
+                <p class="gameModeDescription">
+                  the game that inspired my snakey obsession
+                </p>
+              </label>
               <input
                 type="radio"
                 id="plain"
@@ -315,7 +412,12 @@
                 value="Plain Mode"
                 onclick="setGameMode(modes.plain)"
               />
-              <label for="plain">Plain</label>
+              <label for="plain" id="finalLabel">
+                Plain
+                <p class="gameModeDescription">
+                  why do we even have this mode?
+                </p>
+              </label>
             </div>
           </div>
         </div>
