@@ -1,5 +1,5 @@
 import { drawOldSnakeObstacles } from "./picture_mode/old_snakey.js";
-import { drawPixel, getFullImage, isImageLoading, loadRandomImage } from "./picture_mode/picture_mode.js";
+import { drawPixel, getFullImage, isImageLoading, loadRandomImage, resetImages } from "./picture_mode/picture_mode.js";
 
 export const modes = {
     disco: "Disco Mode",
@@ -353,8 +353,7 @@ function moveSnake() {
     }
     if (isPictureMode()) {
         if (coveredPositions.length < arenaHeight * arenaWidth &&
-            !coveredPositions.includes(`${snake[0][0]},${snake[0][1]}`) &&
-            !imageRevealed) {
+            !coveredPositions.includes(`${snake[0][0]},${snake[0][1]}`)) {
             try {
                 drawPixel(snake[0][0], snake[0][1]);
                 stepsSinceFillingPixel = 0;
@@ -379,13 +378,14 @@ function moveSnake() {
 
         // Reveal image
         if (coveredPositions.length >= arenaHeight * arenaWidth && !imageRevealed) {
-            imageRevealed = true;
             arena.style.backgroundImage = `url('${getFullImage()}')`;
             arena.style.backgroundSize = "100% 100%";
             arena.innerHTML = "";
             border = [];
             drawWholeSnake();
             drawSquare("black", foodPosition, "food").id = "food";
+            coveredPositions = [];
+            loadRandomImage();
         }
     }
 
@@ -504,8 +504,8 @@ dPad.addEventListener("touchmove", (event) => {
 });
 
 function queueTurn(e) {
+    e.preventDefault();
     if (e.code == "Space") {
-        e.preventDefault();
         if (!activeGame) {
             startGame();
             return;
@@ -521,7 +521,6 @@ function queueTurn(e) {
         e.code == "ArrowLeft" ||
         e.code == "ArrowRight"
     ) {
-        e.preventDefault();
         if (turnQueue[0] !== e.code) turnQueue.unshift(e.code);
     }
 }
@@ -553,6 +552,7 @@ function changeDirection(code) {
 
 function startGame() {
     let scoreTitle = getScoreTitle();
+    resetImages();
     best = localStorage.getItem(scoreTitle) ?
         parseInt(localStorage.getItem(scoreTitle)) :
         0;

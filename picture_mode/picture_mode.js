@@ -1,5 +1,6 @@
 import { drawSquare, isMobileScreen } from "../main.js";
 const images = ["california", "cows", "lilies", "olive_trees", "starry", "stream", "wave", "wheat", "willows", "yosemite"];
+let remainingImages = [...images];
 let pixels = [];
 let image = "";
 let imageLoading = false;
@@ -12,8 +13,13 @@ export function isImageLoading() {
     return imageLoading
 }
 
+export function resetImages() {
+    remainingImages = [...images];
+}
+
 export function loadRandomImage() {
-    image = images[Math.floor(Math.random() * images.length)];
+    image = remainingImages[Math.floor(Math.random() * remainingImages.length)];
+    remainingImages = remainingImages.filter(img => img !== image);
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.src = `./picture_mode/${image}${isMobileScreen()? "_mobile": ""}.jpg`;
