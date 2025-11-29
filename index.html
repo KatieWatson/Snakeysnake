@@ -64,7 +64,6 @@
       }
 
       .pop-over-img {
-        margin: 5px;
         max-width: 290px;
       }
 
@@ -104,6 +103,11 @@
         padding-bottom: 35px;
       }
 
+      #padding-right-box {
+        display: flex;
+        flex-direction: column;
+      }
+
       @media (max-width: 800px) {
         .popover {
           top: 10%;
@@ -129,6 +133,9 @@
         }
         #padding-right-box {
           padding-right: 20px;
+        }
+        #img_background {
+          width: -webkit-fill-available;
         }
       }
 
@@ -202,31 +209,41 @@
       >
     </div>
     <div style="width: 100%; justify-content: center; display: flex">
-      <img id="dPad" src="d_pad.png" style="width: inherit" />
+      <img id="dPad" src="d_pad.png" style="width: inherit; display: none" />
     </div>
     <div id="start-screen-overlay" style="color: black">
       <div class="overlay"></div>
 
       <div class="popover">
-        <img id="Disco Mode" src="disco_slug.png" class="pop-over-img" />
-        <img
-          id="Picture Mode"
-          src="picture_slug.png"
-          class="pop-over-img"
-          style="display: none"
-        />
-        <img
-          id="Old Snakey"
-          src="old_snakey_slug.png"
-          class="pop-over-img"
-          style="display: none"
-        />
-        <img
-          id="Plain Mode"
-          src="sad_slug.png"
-          class="pop-over-img"
-          style="display: none"
-        />
+        <div
+          style="
+            background-image: url(./background.png);
+            background-size: 100% 100%;
+            margin: 5px;
+            border-radius: 90px;
+          "
+          class="img_background"
+        >
+          <img id="Disco Mode" src="disco_slug.png" class="pop-over-img" />
+          <img
+            id="Picture Mode"
+            src="picture_slug.png"
+            class="pop-over-img"
+            style="display: none"
+          />
+          <img
+            id="Old Snakey"
+            src="old_snakey_slug.png"
+            class="pop-over-img"
+            style="display: none"
+          />
+          <img
+            id="Plain Mode"
+            src="sad_slug.png"
+            class="pop-over-img"
+            style="display: none"
+          />
+        </div>
         <div class="popover-text">
           <div>
             <div id="padding-right-box">
@@ -250,6 +267,17 @@
             <div>
               Select Game Mode:<br />
               <div class="menuList">
+                <input
+                  type="checkbox"
+                  class="wormholeToggle"
+                  name="wormhole"
+                  value="Wormhole Mode"
+                  onclick="toggleWormholeMode()"
+                />
+                <label for="wormhole">
+                  Wormhole Mode
+                  <p class="gameModeDescription">where snake knows no bounds</p>
+                </label>
                 <input
                   type="radio"
                   id="disco"
@@ -287,7 +315,10 @@
                 <label for="oldSnakey">
                   Old Snakey
                   <p class="gameModeDescription">
-                    the game that inspired my snakey obsession
+                    <span> the game that inspired my snakey obsession </span>
+                    <span style="color: red; padding-left: 0"
+                      >[no wormhole mode]</span
+                    >
                   </p>
                 </label>
                 <input
@@ -312,46 +343,54 @@
     <div id="end-screen-overlay" style="visibility: hidden; color: black">
       <div class="overlay"></div>
       <div class="popover">
-        <img id="highScore" src="new_high_score.png" class="pop-over-img" />
-        <img id="gameOver" src="game_over.png" class="pop-over-img" />
-        <img
-          id="Disco Mode"
-          src="disco_slug.png"
-          class="pop-over-img"
-          style="display: none"
-        />
-        <img
-          id="Picture Mode"
-          src="picture_slug.png"
-          class="pop-over-img"
-          style="display: none"
-        />
-        <img
-          id="Old Snakey"
-          src="old_snakey_slug.png"
-          class="pop-over-img"
-          style="display: none"
-        />
-        <img
-          id="Plain Mode"
-          src="sad_slug.png"
-          class="pop-over-img"
-          style="display: none"
-        />
+        <div
+          style="
+            background-image: url(./background.png);
+            background-size: 100% 100%;
+            margin: 5px;
+            border-radius: 90px;
+          "
+          class="img_background"
+        >
+          <img id="highScore" src="new_high_score.png" class="pop-over-img" />
+          <img id="gameOver" src="game_over.png" class="pop-over-img" />
+          <img
+            id="Disco Mode"
+            src="disco_slug.png"
+            class="pop-over-img"
+            style="display: none"
+          />
+          <img
+            id="Picture Mode"
+            src="picture_slug.png"
+            class="pop-over-img"
+            style="display: none"
+          />
+          <img
+            id="Old Snakey"
+            src="old_snakey_slug.png"
+            class="pop-over-img"
+            style="display: none"
+          />
+          <img
+            id="Plain Mode"
+            src="sad_slug.png"
+            class="pop-over-img"
+            style="display: none"
+          />
+        </div>
         <div class="popover-text">
           <div>
             <div id="padding-right-box" style="padding-top: 14px">
               <div id="finalScore" style="font-size: 2.5em"></div>
               <div
-                id="mobileScore"
+                id="scoreTitle"
                 style="
                   font-size: 0.9em;
                   margin-top: -0.4em;
                   margin-bottom: 0.4em;
                 "
-              >
-                (mobile)
-              </div>
+              ></div>
               <button
                 class="start-button"
                 title="spacebar"
@@ -359,12 +398,22 @@
               >
                 START AGAIN
               </button>
-              <br />
             </div>
           </div>
           <div>
             Select Game Mode:<br />
             <div class="menuList">
+              <input
+                type="checkbox"
+                class="wormholeToggle"
+                name="wormhole2"
+                value="Wormhole Mode"
+                onclick="toggleWormholeMode()"
+              />
+              <label for="wormhole">
+                Wormhole Mode
+                <p class="gameModeDescription">where snake knows no bounds</p>
+              </label>
               <input
                 type="radio"
                 id="disco"
@@ -402,7 +451,10 @@
               <label for="oldSnakey">
                 Old Snakey
                 <p class="gameModeDescription">
-                  the game that inspired my snakey obsession
+                  <span> the game that inspired my snakey obsession </span>
+                  <span style="color: red; padding-left: 0"
+                    >[no wormhole mode]</span
+                  >
                 </p>
               </label>
               <input

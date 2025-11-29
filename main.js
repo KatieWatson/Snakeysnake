@@ -15,15 +15,13 @@ let stepsSinceFillingPixel = 0;
 let flashing = 0;
 let flashFood = false;
 let flashFoodCount = 0;
+let best = 0;
 
 let currentMode = modes.disco;
+let wormholeMode = false;
 let lastTouchStartInCenter = 0;
 let newHighScore = false;
 let score = 0;
-let best = localStorage.getItem(isMobileScreen() ? "mobileBest" : "best") ?
-    parseInt(localStorage.getItem(isMobileScreen() ? "mobileBest" : "best")) :
-    0;
-document.getElementById("best").innerText = best;
 let arenaWidth = isMobileScreen() ? 50 : 75;
 let arenaHeight = isMobileScreen() ? 30 : 40;
 const arena = document.getElementById("arena");
@@ -35,14 +33,11 @@ let borderWidth = -1;
 setArenaSize();
 
 const dPad = document.getElementById("dPad");
-const mobileScore = document.getElementById("mobileScore");
 
 if (isMobileScreen()) {
     dPad.style.display = "block";
-    mobileScore.style.display = "block";
 } else {
     dPad.style.display = "none";
-    mobileScore.style.display = "none";
 }
 
 let centerX = ~~(arenaWidth / 2);
@@ -68,7 +63,7 @@ let moving = false;
 
 let obstacles = [];
 
-let step = setInterval(
+setInterval(
     function() {
         moveSnake();
     },
@@ -78,6 +73,9 @@ let step = setInterval(
 arena.style.width = `${arenaWidth * blockSize}`;
 arena.style.height = `${arenaHeight * blockSize}`;
 
+function getScoreTitle() {
+    return (isMobileScreen() ? "mobile-" : "") + (wormholeMode ? "wormhole-" : "") + getGameMode();
+}
 
 function setRadioValue(groupName, valueToSelect) {
     const radioButtons = document.querySelectorAll(`input[name="${groupName}"]`);
@@ -111,8 +109,42 @@ export function setGameMode(mode) {
     currentMode = mode;
     setRadioValue("gameMode2", mode);
     setImages(mode);
+    let wormholeToggles = Array.from(document.getElementsByClassName("wormholeToggle"));
+    if (isOldSnakeyMode()) {
+        wormholeMode = false;
+        wormholeToggles.forEach(elem => {
+            elem.checked = false;
+            elem.disabled = true;
+        });
+        Array.from(document.getElementsByClassName("img_background")).forEach(elem => {
+            elem.style.backgroundImage = `url('background.png')`;
+        });
+    } else {
+        wormholeToggles.forEach(elem => {
+            elem.disabled = false;
+        });
+    }
 }
 window.setGameMode = setGameMode;
+
+export function toggleWormholeMode() {
+    wormholeMode = !wormholeMode;
+    let wormholeToggles = Array.from(document.getElementsByClassName("wormholeToggle"));
+    wormholeToggles.forEach(elem => {
+        elem.checked = wormholeMode;
+    });
+    let imgBackgrounds = Array.from(document.getElementsByClassName("img_background"));
+    if (wormholeMode) {
+        imgBackgrounds.forEach(elem => {
+            elem.style.backgroundImage = `url('background_wormhole.png')`;
+        });
+    } else {
+        imgBackgrounds.forEach(elem => {
+            elem.style.backgroundImage = `url('background.png')`;
+        });
+    }
+}
+window.toggleWormholeMode = toggleWormholeMode;
 
 export function getArenaDimensions() {
     return { width: arenaWidth, height: arenaHeight };
@@ -280,33 +312,25 @@ function moveSnake() {
     }
     switch (direction) {
         case "u":
-            snake = [
-                [snake[0][0], snake[0][1] - 1]
-            ].concat(snake);
+            snake.unshift([snake[0][0], wormholeMode && (snake[0][1] - 1) < 0 ? arenaHeight - 1 : (snake[0][1] - 1)]);
             break;
         case "d":
-            snake = [
-                [snake[0][0], snake[0][1] + 1]
-            ].concat(snake);
+            snake.unshift([snake[0][0], wormholeMode ? (snake[0][1] + 1) % arenaHeight : (snake[0][1] + 1)]);
             break;
         case "l":
-            snake = [
-                [snake[0][0] - 1, snake[0][1]]
-            ].concat(snake);
+            snake.unshift([wormholeMode && (snake[0][0] - 1) < 0 ? arenaWidth - 1 : (snake[0][0] - 1), snake[0][1]]);
             break;
         case "r":
-            snake = [
-                [snake[0][0] + 1, snake[0][1]]
-            ].concat(snake);
+            snake.unshift([wormholeMode ? (snake[0][0] + 1) % arenaWidth : (snake[0][0] + 1), snake[0][1]]);
             break;
     }
     // Check whether the snake got itself or hit a wall.
     if (
         listIncludesPoint(snake.slice(1, -1), snake[0]) ||
-        snake[0][0] < 0 ||
-        snake[0][0] > arenaWidth - 1 ||
-        snake[0][1] < 0 ||
-        snake[0][1] > arenaHeight - 1 ||
+        ((snake[0][0] < 0 ||
+            snake[0][0] > arenaWidth - 1 ||
+            snake[0][1] < 0 ||
+            snake[0][1] > arenaHeight - 1) && !wormholeMode) ||
         obstacles.includes(`(${snake[0][0]}, ${snake[0][1]})`)) {
         endScreen();
         return;
@@ -320,7 +344,7 @@ function moveSnake() {
         if (score > best) {
             newHighScore = true;
             best = score;
-            localStorage.setItem(isMobileScreen() ? "mobileBest" : "best", best);
+            localStorage.setItem(getScoreTitle(), best);
             document.getElementById("best").innerText = best;
             document.getElementById("bestScore").style.display = "none";
             document.getElementById("bestBanner").style.display = "inline";
@@ -331,9 +355,12 @@ function moveSnake() {
         if (coveredPositions.length < arenaHeight * arenaWidth &&
             !coveredPositions.includes(`${snake[0][0]},${snake[0][1]}`) &&
             !imageRevealed) {
-            drawPixel(snake[0][0], snake[0][1]);
-            stepsSinceFillingPixel = 0;
-            coveredPositions.push(`${snake[0][0]},${snake[0][1]}`);
+            try {
+                drawPixel(snake[0][0], snake[0][1]);
+                stepsSinceFillingPixel = 0;
+                coveredPositions.push(`${snake[0][0]},${snake[0][1]}`);
+
+            } catch (e) {}
         } else {
             stepsSinceFillingPixel++;
         }
@@ -350,6 +377,7 @@ function moveSnake() {
             }
         }
 
+        // Reveal image
         if (coveredPositions.length >= arenaHeight * arenaWidth && !imageRevealed) {
             imageRevealed = true;
             arena.style.backgroundImage = `url('${getFullImage()}')`;
@@ -362,14 +390,15 @@ function moveSnake() {
     }
 
     border.unshift(drawSquare(isOldSnakeyMode() ? "black" : "white", snake[0], isDiscoMode() ? "border" : ""));
+    document.getElementById("b").style.color = colors[currentColor];
+    document.getElementById("e").style.color = colors[currentColor - 2];
+    document.getElementById("s").style.color = colors[currentColor - 4];
+    document.getElementById("t").style.color = colors[currentColor - 6];
 
     if (isDiscoMode()) {
         snakeObjects.unshift(drawSquare(colors[currentColor], snake[0], ""));
         currentColor++;
-        document.getElementById("b").style.color = colors[currentColor];
-        document.getElementById("e").style.color = colors[currentColor - 2];
-        document.getElementById("s").style.color = colors[currentColor - 4];
-        document.getElementById("t").style.color = colors[currentColor - 6];
+
         if (coveredPositions.length < arenaHeight * arenaWidth &&
             !coveredPositions.includes(`${snake[0][0]},${snake[0][1]}`) &&
             !imageRevealed) {
@@ -389,7 +418,7 @@ function moveSnake() {
         }
     }
 
-    // Delete the tail if not growing.1
+    // Delete the tail if not growing.
     if (growCount > 0) {
         growCount--;
     } else {
@@ -493,7 +522,7 @@ function queueTurn(e) {
         e.code == "ArrowRight"
     ) {
         e.preventDefault();
-        if (turnQueue[0] !== e.code) turnQueue = [e.code].concat(turnQueue);
+        if (turnQueue[0] !== e.code) turnQueue.unshift(e.code);
     }
 }
 
@@ -523,6 +552,17 @@ function changeDirection(code) {
 }
 
 function startGame() {
+    let scoreTitle = getScoreTitle();
+    best = localStorage.getItem(scoreTitle) ?
+        parseInt(localStorage.getItem(scoreTitle)) :
+        0;
+    document.getElementById("best").innerText = best;
+    document.getElementById("scoreTitle").innerText = `(${scoreTitle})`;
+    if (wormholeMode) {
+        arena.style.boxShadow = "inset 0px 0px 23px 2px #56268e";
+    } else {
+        arena.style.boxShadow = "none";
+    }
     obstacles = [];
     arena.style.backgroundImage = "none";
     arena.style.backgroundColor = isOldSnakeyMode() ? "white" : "lightslategray";
