@@ -36,7 +36,6 @@ const dPad = document.getElementById("dPad");
 
 if (isMobileScreen()) {
     dPad.style.display = "block";
-    screen.orientation.lock("portrait").catch(() => { console.log("Orientation lock failed") });
 } else {
     dPad.style.display = "none";
 }
