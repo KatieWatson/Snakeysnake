@@ -504,7 +504,7 @@ dPad.addEventListener("touchmove", (event) => {
 });
 
 function queueTurn(e) {
-    e.preventDefault();
+
     if (e.code == "Space") {
         if (!activeGame) {
             startGame();
@@ -512,16 +512,17 @@ function queueTurn(e) {
         }
         moving = !moving;
     }
-    if (!moving) {
-        return;
-    }
+
     if (
         e.code == "ArrowUp" ||
         e.code == "ArrowDown" ||
         e.code == "ArrowLeft" ||
         e.code == "ArrowRight"
     ) {
-        if (turnQueue[0] !== e.code) turnQueue.unshift(e.code);
+        e.preventDefault();
+        if (moving && turnQueue[0] !== e.code) turnQueue.unshift(e.code);
+
+
     }
 }
 
