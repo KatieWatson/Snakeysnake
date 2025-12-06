@@ -363,7 +363,7 @@ function moveSnake() {
         } else {
             stepsSinceFillingPixel++;
         }
-        if (stepsSinceFillingPixel > 150) {
+        if (stepsSinceFillingPixel > 150 || flashing > 0) {
             flashing++;
             if (flashing < 8) {
                 arena.style.backgroundColor = "white";
