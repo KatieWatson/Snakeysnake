@@ -17,8 +17,10 @@ let flashFood = false;
 let flashFoodCount = 0;
 let best = 0;
 
-let currentMode = modes.disco;
-let wormholeMode = false;
+let currentMode = localStorage.getItem("selectedMode") ? localStorage.getItem("selectedMode") : modes.disco;
+let wormholeMode = localStorage.getItem("wormholeMode") == "true" ? true : false;
+setGameMode(currentMode);
+setWormholeMode(wormholeMode);
 let lastTouchStartInCenter = 0;
 let newHighScore = false;
 let score = 0;
@@ -107,19 +109,14 @@ window.getGameMode = getGameMode;
 
 export function setGameMode(mode) {
     currentMode = mode;
+    localStorage.setItem("selectedMode", mode);
     setRadioValue("gameMode2", mode);
+    setRadioValue("gameMode", mode);
     setImages(mode);
-    let wormholeToggles = Array.from(document.getElementsByClassName("wormholeToggle"));
     if (isOldSnakeyMode()) {
-        wormholeMode = false;
-        wormholeToggles.forEach(elem => {
-            elem.checked = false;
-            elem.disabled = true;
-        });
-        Array.from(document.getElementsByClassName("img_background")).forEach(elem => {
-            elem.style.backgroundImage = `url('background.png')`;
-        });
+        disableWormholeMode();
     } else {
+        let wormholeToggles = Array.from(document.getElementsByClassName("wormholeToggle"));
         wormholeToggles.forEach(elem => {
             elem.disabled = false;
         });
@@ -127,8 +124,9 @@ export function setGameMode(mode) {
 }
 window.setGameMode = setGameMode;
 
-export function toggleWormholeMode() {
-    wormholeMode = !wormholeMode;
+function setWormholeMode(on) {
+    wormholeMode = on;
+    localStorage.setItem("wormholeMode", wormholeMode.toString());
     let wormholeToggles = Array.from(document.getElementsByClassName("wormholeToggle"));
     wormholeToggles.forEach(elem => {
         elem.checked = wormholeMode;
@@ -143,6 +141,19 @@ export function toggleWormholeMode() {
             elem.style.backgroundImage = `url('background.png')`;
         });
     }
+}
+
+function disableWormholeMode() {
+    setWormholeMode(false);
+    let wormholeToggles = Array.from(document.getElementsByClassName("wormholeToggle"));
+    wormholeToggles.forEach(elem => {
+        elem.disabled = true;
+    });
+}
+
+export function toggleWormholeMode() {
+    setWormholeMode(!wormholeMode);
+    setImages(currentMode);
 }
 window.toggleWormholeMode = toggleWormholeMode;
 
