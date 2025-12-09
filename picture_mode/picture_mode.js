@@ -13,7 +13,7 @@ export function isImageLoading() {
     return imageLoading
 }
 
-export function resetImages() {
+export function resetPictureModeImages() {
     remainingImages = [...images];
 }
 

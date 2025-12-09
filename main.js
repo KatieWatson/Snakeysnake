@@ -1,5 +1,6 @@
+import { getNextDiscoImage, resetDiscoImages } from "./disco_mode.js";
 import { drawOldSnakeObstacles } from "./picture_mode/old_snakey.js";
-import { drawPixel, getFullImage, isImageLoading, loadRandomImage, resetImages } from "./picture_mode/picture_mode.js";
+import { drawPixel, getFullImage, isImageLoading, loadRandomImage, resetPictureModeImages } from "./picture_mode/picture_mode.js";
 
 export const modes = {
     disco: "Disco Mode",
@@ -10,7 +11,6 @@ export const modes = {
 window.modes = modes;
 
 let coveredPositions = [];
-let imageRevealed = false;
 let stepsSinceFillingPixel = 0;
 let flashing = 0;
 let flashFood = false;
@@ -388,10 +388,11 @@ function moveSnake() {
         }
 
         // Reveal image
-        if (coveredPositions.length >= arenaHeight * arenaWidth && !imageRevealed) {
+        if (coveredPositions.length >= arenaHeight * arenaWidth) {
             arena.style.backgroundImage = `url('${getFullImage()}')`;
             arena.style.backgroundSize = "100% 100%";
             arena.innerHTML = "";
+            doubleScore();
             border = [];
             drawWholeSnake();
             drawSquare("black", foodPosition, "food").id = "food";
@@ -411,18 +412,17 @@ function moveSnake() {
         currentColor++;
 
         if (coveredPositions.length < arenaHeight * arenaWidth &&
-            !coveredPositions.includes(`${snake[0][0]},${snake[0][1]}`) &&
-            !imageRevealed) {
+            !coveredPositions.includes(`${snake[0][0]},${snake[0][1]}`)) {
             coveredPositions.push(`${snake[0][0]},${snake[0][1]}`);
         }
-        if (coveredPositions.length >= arenaHeight * arenaWidth &&
-            !imageRevealed) {
-            imageRevealed = true;
-            arena.style.backgroundImage = `url('winner.jpg')`;
+        if (coveredPositions.length >= arenaHeight * arenaWidth) {
+            arena.style.backgroundImage = `url('${getNextDiscoImage()}')`;
             arena.style.backgroundSize = "100% 100%";
             arena.innerHTML = "";
+            doubleScore();
             border = [];
             snakeObjects = [];
+            coveredPositions = [];
             drawWholeSnake();
             drawSquare(isOldSnakeyMode() ? "green" : "black", foodPosition, "food").id = "food";
             flashFood = true;
@@ -564,7 +564,8 @@ function changeDirection(code) {
 
 function startGame() {
     let scoreTitle = getScoreTitle();
-    resetImages();
+    resetPictureModeImages();
+    resetDiscoImages();
     best = localStorage.getItem(scoreTitle) ?
         parseInt(localStorage.getItem(scoreTitle)) :
         0;
@@ -585,7 +586,6 @@ function startGame() {
     setArenaSize();
     loadRandomImage();
     coveredPositions = [];
-    imageRevealed = false;
     newHighScore = false;
     score = 0;
     document.getElementById("score").innerText = score;
@@ -650,4 +650,23 @@ function endScreen() {
     endOverlay.style.visibility = "visible";
     moving = false;
     activeGame = false;
+}
+
+function doubleScore() {
+    score = score * 2;
+    document.getElementById("score").innerText = score;
+    let banner = document.createElement("div");
+    banner.innerText = "SCORE DOUBLED!";
+    arena.appendChild(banner);
+    banner.id = "double"
+    let opacity = 1;
+    const interval = setInterval(() => {
+        if (opacity > 0) {
+            opacity -= 0.02;
+            banner.style.opacity = opacity;
+        } else {
+            clearInterval(interval);
+            banner.style.display = 'none';
+        }
+    }, 50);
 }
