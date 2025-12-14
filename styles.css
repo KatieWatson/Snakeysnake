@@ -167,10 +167,17 @@ label {
         border-radius: 90px;
         display: flex;
     }
-    .testElement {
-        background-color: pink;
-    }
     #header {
         font-size: 2em;
     }
+}
+
+#bandcamp-player {
+    margin: 5px;
+    border: 0;
+    width: 82px;
+    height: 42px;
+    overflow: hidden;
+    flex-shrink: 0;
+    z-index: 1000000000;
 }

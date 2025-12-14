@@ -38,6 +38,7 @@ const dPad = document.getElementById("dPad");
 
 if (isMobileScreen()) {
     dPad.style.display = "block";
+    document.getElementById("bandcamp-player").style.width = "75px";
 } else {
     dPad.style.display = "none";
 }
@@ -232,6 +233,11 @@ export function isPictureMode() {
     return currentMode == modes.picture;
 }
 
+export function isHolidayMode() {
+    return true;
+}
+window.isHolidayMode = isHolidayMode;
+
 function setFood() {
     let x = ~~(Math.random() * arenaWidth);
     let y = ~~(Math.random() * arenaHeight);
@@ -306,6 +312,7 @@ function makeColorSequence(gradientCount) {
 }
 
 function moveSnake() {
+    window.focus();
     if (flashFood) {
         flashFoodCount++;
         if (flashFoodCount < 8) {
@@ -563,6 +570,8 @@ function changeDirection(code) {
 }
 
 function startGame() {
+    // const playMusicButton = document.getElementById("bandcamp-player").contentWindow //.document.getElementById("big_play_button");
+    // console.log(playMusicButton)
     let scoreTitle = getScoreTitle();
     resetPictureModeImages();
     resetDiscoImages();
