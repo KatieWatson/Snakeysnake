@@ -1,6 +1,5 @@
 <html>
-
-<head>
+  <head>
     <title>Disco Jerry's Snakey Snake</title>
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="preload" as="image" href="./picture_mode/california_full.jpg" />
@@ -14,101 +13,172 @@
     <link rel="preload" as="image" href="./picture_mode/yosemite_full.jpg" />
     <link rel="preload" as="image" href="./background.png" />
     <link rel="preload" as="image" href="./background_wormhole.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
     <link rel="stylesheet" href="styles.css" />
     <script src="./main.js" type="module"></script>
-</head>
+  </head>
 
-<body style="
+  <body
+    style="
       font-family: 'Courier New', Courier, monospace;
       background-color: #261736;
       color: #e0dae7;
       display: initial;
       overflow: hidden;
-    ">
+    "
+  >
     <script src="https://unpkg.com/magic-snowflakes/dist/snowflakes.min.js"></script>
     <script>
-        var sf = new Snowflakes({
-            color: "#efedf3",
-            count: 100,
-        });
+      var sf = new Snowflakes({
+        color: "#efedf3",
+        count: 75,
+      });
     </script>
     <div id="header">
-        <img src="lil_slug.png" style="
+      <img
+        src="lil_slug.png"
+        style="
           padding-right: 5px;
           height: 2em;
           padding-inline: 3px;
           flex-shrink: 0;
-        " id="headerSlug" />
-        <p id="titleText" style="flex-grow: 1">DISCO JERRY'S SNAKEY SNAKE GAME</p>
+        "
+        id="headerSlug"
+      />
+      <p id="titleText" style="flex-grow: 1">DISCO JERRY'S SNAKEY SNAKE GAME</p>
 
-        <iframe id="bandcamp-player" src="https://bandcamp.com/EmbeddedPlayer/album=807688521/size=small/bgcol=ffffff/linkcol=7137dc/transparent=true/" seamless></iframe>
+      <iframe
+        id="bandcamp-player"
+        src="https://bandcamp.com/EmbeddedPlayer/album=807688521/size=small/bgcol=ffffff/linkcol=7137dc/transparent=true/"
+        seamless
+      ></iframe>
     </div>
     <div style="width: fit-content; margin-inline: auto">
-        <div id="arena"></div>
-        <span>Score:</span>
-        <span id="score">0</span>
-        <span id="bestScore" style="margin-left: 10px">
+      <div id="arena"></div>
+      <span>Score:</span>
+      <span id="score">0</span>
+      <span id="bestScore" style="margin-left: 10px">
         <span>Best:</span>
         <span id="best">0</span>
-        </span>
-        <span id="bestBanner" style="margin-left: 10px; display: none"><span id="b">B</span>
+      </span>
+      <span id="bestBanner" style="margin-left: 10px; display: none"
+        ><span id="b">B</span>
         <span id="e">E</span>
         <span id="s">S</span>
-        <span id="t">T</span></span>
+        <span id="t">T</span></span
+      >
     </div>
     <div id="start-screen-overlay" style="color: black">
-        <div class="overlay"></div>
+      <div class="overlay"></div>
 
-        <div class="popover">
-            <div style="
+      <div class="popover">
+        <div
+          style="
             background-image: url(./background.png);
             background-size: 100% 100%;
             margin: 5px;
             border-radius: 90px;
-          " class="img_background">
-                <img id="Disco Mode" src="disco_slug.png" class="pop-over-img" style="display: none" />
-                <img id="Picture Mode" src="picture_slug.png" class="pop-over-img" style="display: none" />
-                <img id="Old Snakey" src="old_snakey_slug.png" class="pop-over-img" style="display: none" />
-                <img id="Plain Mode" src="sad_slug.png" class="pop-over-img" style="display: none" />
-            </div>
-            <div class="popover-text">
-                <div>
-                    <div id="padding-right-box">
-                        <div style="font-size: 2em">WELCOME</div>
-                        <div class="popover-message" style="font-size: 0.8em; padding-bottom: 7px">
-                            to disco jerry's snakey snake arena
-                        </div>
-                        <div style="width: 100%; display: flex; align-items: center">
-                            <button title="spacebar" onclick="startGame()" class="start-button">
+          "
+          class="img_background"
+        >
+          <img
+            id="Disco Mode"
+            src="disco_slug.png"
+            class="pop-over-img"
+            style="display: none"
+          />
+          <img
+            id="Picture Mode"
+            src="picture_slug.png"
+            class="pop-over-img"
+            style="display: none"
+          />
+          <img
+            id="Old Snakey"
+            src="old_snakey_slug.png"
+            class="pop-over-img"
+            style="display: none"
+          />
+          <img
+            id="Plain Mode"
+            src="sad_slug.png"
+            class="pop-over-img"
+            style="display: none"
+          />
+        </div>
+        <div class="popover-text">
+          <div>
+            <div id="padding-right-box">
+              <div style="font-size: 2em">WELCOME</div>
+              <div
+                class="popover-message"
+                style="font-size: 0.8em; padding-bottom: 7px"
+              >
+                to disco jerry's snakey snake arena
+              </div>
+              <div style="width: 100%; display: flex; align-items: center">
+                <button
+                  title="spacebar"
+                  onclick="startGame()"
+                  class="start-button"
+                >
                   START
                 </button>
-                        </div>
-                    </div>
-                    <div>
-                        Select Game Mode:<br />
-                        <div class="menuList">
-                            <input type="checkbox" id="wormhole" class="wormholeToggle" name="wormhole" value="Wormhole Mode" onclick="toggleWormholeMode()" />
-                            <label for="wormhole">
+              </div>
+            </div>
+            <div>
+              Select Game Mode:<br />
+              <div class="menuList">
+                <input
+                  type="checkbox"
+                  id="wormhole"
+                  class="wormholeToggle"
+                  name="wormhole"
+                  value="Wormhole Mode"
+                  onclick="toggleWormholeMode()"
+                />
+                <label for="wormhole">
                   Wormhole Mode
                   <p class="gameModeDescription">where snake knows no bounds</p>
                 </label>
-                            <input type="radio" id="disco" name="gameMode" value="Disco Mode" onclick="setGameMode(modes.disco)" checked />
-                            <label for="disco">
+                <input
+                  type="radio"
+                  id="disco"
+                  name="gameMode"
+                  value="Disco Mode"
+                  onclick="setGameMode(modes.disco)"
+                  checked
+                />
+                <label for="disco">
                   Disco
                   <p class="gameModeDescription">
                     fill the board with dazzling designs
                   </p>
                 </label>
-                            <input type="radio" id="picture" name="gameMode" value="Picture Mode" onclick="setGameMode(modes.picture)" />
-                            <label for="picture">
+                <input
+                  type="radio"
+                  id="picture"
+                  name="gameMode"
+                  value="Picture Mode"
+                  onclick="setGameMode(modes.picture)"
+                />
+                <label for="picture">
                   Picture
                   <p class="gameModeDescription">
                     uncover every pixel to reveal a hidden image
                   </p>
                 </label>
-                            <input type="radio" id="oldSnakey" name="gameMode" value="Old Snakey" onclick="setGameMode(modes.oldSnakey)" />
-                            <label for="oldSnakey">
+                <input
+                  type="radio"
+                  id="oldSnakey"
+                  name="gameMode"
+                  value="Old Snakey"
+                  onclick="setGameMode(modes.oldSnakey)"
+                />
+                <label for="oldSnakey">
                   Old Snakey
                   <p class="gameModeDescription">
                     <span> the game that inspired my snakey obsession </span>
@@ -117,73 +187,135 @@
                     >
                   </p>
                 </label>
-                            <input type="radio" id="plain" name="gameMode" value="Plain Mode" onclick="setGameMode(modes.plain)" />
-                            <label for="plain" id="finalLabel">
+                <input
+                  type="radio"
+                  id="plain"
+                  name="gameMode"
+                  value="Plain Mode"
+                  onclick="setGameMode(modes.plain)"
+                />
+                <label for="plain" id="finalLabel">
                   Plain
                   <p class="gameModeDescription">
                     why do we even have this mode?
                   </p>
                 </label>
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
     <div id="end-screen-overlay" style="visibility: hidden; color: black">
-        <div class="overlay"></div>
-        <div class="popover">
-            <div style="
+      <div class="overlay"></div>
+      <div class="popover">
+        <div
+          style="
             background-image: url(./background.png);
             background-size: 100% 100%;
             margin: 5px;
             border-radius: 90px;
-          " class="img_background">
-                <img id="highScore" src="new_high_score.png" class="pop-over-img" />
-                <img id="gameOver" src="game_over.png" class="pop-over-img" />
-                <img id="Disco Mode" src="disco_slug.png" class="pop-over-img" style="display: none" />
-                <img id="Picture Mode" src="picture_slug.png" class="pop-over-img" style="display: none" />
-                <img id="Old Snakey" src="old_snakey_slug.png" class="pop-over-img" style="display: none" />
-                <img id="Plain Mode" src="sad_slug.png" class="pop-over-img" style="display: none" />
-            </div>
-            <div class="popover-text">
-                <div>
-                    <div id="padding-right-box" style="padding-top: 14px">
-                        <div id="finalScore" style="font-size: 2.5em"></div>
-                        <div id="scoreTitle" style="
+          "
+          class="img_background"
+        >
+          <img id="highScore" src="new_high_score.png" class="pop-over-img" />
+          <img id="gameOver" src="game_over.png" class="pop-over-img" />
+          <img
+            id="Disco Mode"
+            src="disco_slug.png"
+            class="pop-over-img"
+            style="display: none"
+          />
+          <img
+            id="Picture Mode"
+            src="picture_slug.png"
+            class="pop-over-img"
+            style="display: none"
+          />
+          <img
+            id="Old Snakey"
+            src="old_snakey_slug.png"
+            class="pop-over-img"
+            style="display: none"
+          />
+          <img
+            id="Plain Mode"
+            src="sad_slug.png"
+            class="pop-over-img"
+            style="display: none"
+          />
+        </div>
+        <div class="popover-text">
+          <div>
+            <div id="padding-right-box" style="padding-top: 14px">
+              <div id="finalScore" style="font-size: 2.5em"></div>
+              <div
+                id="scoreTitle"
+                style="
                   font-size: 0.9em;
                   margin-top: -0.4em;
                   margin-bottom: 0.4em;
-                "></div>
-                        <button class="start-button" title="spacebar" onclick="startGame()">
+                "
+              ></div>
+              <button
+                class="start-button"
+                title="spacebar"
+                onclick="startGame()"
+              >
                 START AGAIN
               </button>
-                    </div>
-                </div>
-                <div>
-                    Select Game Mode:<br />
-                    <div class="menuList">
-                        <input type="checkbox" id="wormhole2" class="wormholeToggle" name="wormhole2" value="Wormhole Mode" onclick="toggleWormholeMode()" />
-                        <label for="wormhole2">
+            </div>
+          </div>
+          <div>
+            Select Game Mode:<br />
+            <div class="menuList">
+              <input
+                type="checkbox"
+                id="wormhole2"
+                class="wormholeToggle"
+                name="wormhole2"
+                value="Wormhole Mode"
+                onclick="toggleWormholeMode()"
+              />
+              <label for="wormhole2">
                 Wormhole Mode
                 <p class="gameModeDescription">where snake knows no bounds</p>
               </label>
-                        <input type="radio" id="disco" name="gameMode2" value="Disco Mode" onclick="setGameMode(modes.disco)" checked />
-                        <label for="disco">
+              <input
+                type="radio"
+                id="disco"
+                name="gameMode2"
+                value="Disco Mode"
+                onclick="setGameMode(modes.disco)"
+                checked
+              />
+              <label for="disco">
                 Disco
                 <p class="gameModeDescription">
                   fill the board with dazzling designs
                 </p>
               </label>
-                        <input type="radio" id="picture" name="gameMode2" value="Picture Mode" onclick="setGameMode(modes.picture)" />
-                        <label for="picture">
+              <input
+                type="radio"
+                id="picture"
+                name="gameMode2"
+                value="Picture Mode"
+                onclick="setGameMode(modes.picture)"
+              />
+              <label for="picture">
                 Picture
                 <p class="gameModeDescription">
                   uncover every pixel to reveal a hidden image
                 </p>
               </label>
-                        <input type="radio" id="oldSnakey" name="gameMode2" value="Old Snakey" onclick="setGameMode(modes.oldSnakey)" />
-                        <label for="oldSnakey">
+              <input
+                type="radio"
+                id="oldSnakey"
+                name="gameMode2"
+                value="Old Snakey"
+                onclick="setGameMode(modes.oldSnakey)"
+              />
+              <label for="oldSnakey">
                 Old Snakey
                 <p class="gameModeDescription">
                   <span> the game that inspired my snakey obsession </span>
@@ -192,22 +324,31 @@
                   >
                 </p>
               </label>
-                        <input type="radio" id="plain" name="gameMode2" value="Plain Mode" onclick="setGameMode(modes.plain)" />
-                        <label for="plain" id="finalLabel">
+              <input
+                type="radio"
+                id="plain"
+                name="gameMode2"
+                value="Plain Mode"
+                onclick="setGameMode(modes.plain)"
+              />
+              <label for="plain" id="finalLabel">
                 Plain
                 <p class="gameModeDescription">
                   why do we even have this mode?
                 </p>
               </label>
-                    </div>
-                </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
     <div style="width: 100%; justify-content: center; display: flex">
-        <img id="dPad" src="d_pad.png" style="width: inherit; display: none; z-index: 10000" />
+      <img
+        id="dPad"
+        src="d_pad.png"
+        style="width: inherit; display: none; z-index: 10000"
+      />
     </div>
     <canvas id="canvas" style="display: none"></canvas>
-</body>
-
+  </body>
 </html>

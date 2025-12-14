@@ -38,7 +38,6 @@ const dPad = document.getElementById("dPad");
 
 if (isMobileScreen()) {
     dPad.style.display = "block";
-    // document.getElementById("bandcamp-player").style.width = "75px";
 } else {
     dPad.style.display = "none";
 }
