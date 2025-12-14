@@ -237,6 +237,19 @@ export function isHolidayMode() {
 }
 window.isHolidayMode = isHolidayMode;
 
+function setScore(newScore) {
+    score = newScore;
+    document.getElementById("score").innerText = score;
+    if (score > best) {
+        newHighScore = true;
+        best = score;
+        localStorage.setItem(getScoreTitle(), best);
+        document.getElementById("best").innerText = best;
+        document.getElementById("bestScore").style.display = "none";
+        document.getElementById("bestBanner").style.display = "inline";
+    }
+}
+
 function setFood() {
     let x = ~~(Math.random() * arenaWidth);
     let y = ~~(Math.random() * arenaHeight);
@@ -356,16 +369,7 @@ function moveSnake() {
     // Check whether the snake got the food
     if (snake[0][0] == foodPosition[0] && snake[0][1] == foodPosition[1]) {
         growCount += 3;
-        score += 10;
-        document.getElementById("score").innerText = score;
-        if (score > best) {
-            newHighScore = true;
-            best = score;
-            localStorage.setItem(getScoreTitle(), best);
-            document.getElementById("best").innerText = best;
-            document.getElementById("bestScore").style.display = "none";
-            document.getElementById("bestBanner").style.display = "inline";
-        }
+        setScore(score + 10);
         setFood();
     }
     if (isPictureMode()) {
@@ -569,8 +573,6 @@ function changeDirection(code) {
 }
 
 function startGame() {
-    // const playMusicButton = document.getElementById("bandcamp-player").contentWindow //.document.getElementById("big_play_button");
-    // console.log(playMusicButton)
     let scoreTitle = getScoreTitle();
     resetPictureModeImages();
     resetDiscoImages();
@@ -595,10 +597,10 @@ function startGame() {
     loadRandomImage();
     coveredPositions = [];
     newHighScore = false;
-    score = 0;
-    document.getElementById("score").innerText = score;
+
     overlay.style.visibility = "hidden";
     endOverlay.style.visibility = "hidden";
+    setScore(0);
     document.getElementById("bestScore").style.display = "inline";
     document.getElementById("bestBanner").style.display = "none";
     foodPosition = [];
@@ -640,6 +642,7 @@ function setArenaSize() {
                 (window.innerHeight - 115) / arenaHeight
             )
         );
+    blockSize = blockSize - blockSize % 2;
     borderWidth = Math.max(Math.floor(blockSize / 4), 1);
     arena.style.width = `${arenaWidth * blockSize}`;
     arena.style.height = `${arenaHeight * blockSize}`;
@@ -661,8 +664,7 @@ function endScreen() {
 }
 
 function doubleScore() {
-    score = score * 2;
-    document.getElementById("score").innerText = score;
+    setScore(score * 2);
     let banner = document.createElement("div");
     banner.innerText = "SCORE DOUBLED!";
     arena.appendChild(banner);
