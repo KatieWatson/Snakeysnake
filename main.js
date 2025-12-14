@@ -134,11 +134,11 @@ function setWormholeMode(on) {
     let imgBackgrounds = Array.from(document.getElementsByClassName("img_background"));
     if (wormholeMode) {
         imgBackgrounds.forEach(elem => {
-            elem.style.backgroundImage = `url('background_wormhole.png')`;
+            elem.style.backgroundImage = `url('holiday_background_wormhole.png')`;
         });
     } else {
         imgBackgrounds.forEach(elem => {
-            elem.style.backgroundImage = `url('background.png')`;
+            elem.style.backgroundImage = `url('holiday_background.png')`;
         });
     }
 }
