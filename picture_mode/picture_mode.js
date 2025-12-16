@@ -1,4 +1,4 @@
-import { drawSquare, isMobileScreen } from "../main.js";
+import { drawSquare, getGameMode, isMobileScreen, modes } from "../main.js";
 const images = ["california", "cows", "lilies", "olive_trees", "starry", "stream", "wave", "wheat", "willows", "yosemite"];
 let remainingImages = [...images];
 let pixels = [];
@@ -18,8 +18,12 @@ export function resetPictureModeImages() {
 }
 
 export function loadRandomImage() {
-    image = remainingImages[Math.floor(Math.random() * remainingImages.length)];
-    remainingImages = remainingImages.filter(img => img !== image);
+    if (getGameMode() == modes.chorusHoliday) {
+        image = "chorus_holiday_card";
+    } else {
+        image = remainingImages[Math.floor(Math.random() * remainingImages.length)];
+        remainingImages = remainingImages.filter(img => img !== image);
+    }
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.src = `./picture_mode/${image}${isMobileScreen()? "_mobile": ""}.jpg`;

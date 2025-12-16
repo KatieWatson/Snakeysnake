@@ -14,8 +14,10 @@ label {
 }
 
 #double {
-    margin: auto;
-    font-size: xx-large;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    font-size: x-large;
     background-color: black;
     font-weight: bold;
     z-index: 1000000;
@@ -175,9 +177,13 @@ label {
 
 #bandcamp-player {
     border: 0;
-    width: 82px;
-    height: 42px;
+    width: 83px;
+    height: 43px;
+    padding: 2px;
     overflow: hidden;
+    display: flex;
+    align-items: center;
     flex-shrink: 0;
     z-index: 1000000000;
+    background: conic-gradient(from var(--angle, 0), transparent, white 10%, green 36%, transparent 40%)
 }

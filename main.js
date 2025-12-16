@@ -1,12 +1,18 @@
 import { getNextDiscoImage, resetDiscoImages } from "./disco_mode.js";
+// import { buildMenu } from "./mode_menu.js";
 import { drawOldSnakeObstacles } from "./picture_mode/old_snakey.js";
 import { drawPixel, getFullImage, isImageLoading, loadRandomImage, resetPictureModeImages } from "./picture_mode/picture_mode.js";
+
+const queryString = window.location.search;
+const mode = new URLSearchParams(queryString).get("mode");
+
 
 export const modes = {
     disco: "Disco Mode",
     picture: "Picture Mode",
     plain: "Plain Mode",
-    oldSnakey: "Old Snakey"
+    oldSnakey: "Old Snakey",
+    chorusHoliday: "Chorus Holiday Mode"
 }
 window.modes = modes;
 
@@ -16,9 +22,13 @@ let flashing = 0;
 let flashFood = false;
 let flashFoodCount = 0;
 let best = 0;
+let cardRevealed = false;
 
-let currentMode = localStorage.getItem("selectedMode") ? localStorage.getItem("selectedMode") : modes.disco;
+let currentMode = mode ?
+    modes[mode] : localStorage.getItem("selectedMode") != modes.chorusHoliday ?
+    localStorage.getItem("selectedMode") : modes.disco;
 let wormholeMode = localStorage.getItem("wormholeMode") == "true" ? true : false;
+// buildMenu();
 setGameMode(currentMode);
 setWormholeMode(wormholeMode);
 let lastTouchStartInCenter = 0;
@@ -229,7 +239,7 @@ export function isOldSnakeyMode() {
 }
 
 export function isPictureMode() {
-    return currentMode == modes.picture;
+    return currentMode == modes.picture || currentMode == modes.chorusHoliday;
 }
 
 export function isHolidayMode() {
@@ -280,6 +290,9 @@ function drawWholeSnake() {
     }
     if (isDiscoMode()) {
         for (let i = 0; i < snake.length; i++) {
+            if (!coveredPositions.includes(`${snake[i][0]},${snake[i][1]}`)) {
+                coveredPositions.push(`${snake[i][0]},${snake[i][1]}`);
+            }
             snakeObjects.push(drawSquare(colors[currentColor], snake[i], ""));
         }
     }
@@ -372,7 +385,7 @@ function moveSnake() {
         setScore(score + 10);
         setFood();
     }
-    if (isPictureMode()) {
+    if (isPictureMode() && !cardRevealed) {
         if (coveredPositions.length < arenaHeight * arenaWidth &&
             !coveredPositions.includes(`${snake[0][0]},${snake[0][1]}`)) {
             try {
@@ -407,6 +420,9 @@ function moveSnake() {
             drawWholeSnake();
             drawSquare("black", foodPosition, "food").id = "food";
             coveredPositions = [];
+            if (isHolidayMode()) {
+                cardRevealed = true;
+            }
             loadRandomImage();
         }
     }
@@ -416,6 +432,16 @@ function moveSnake() {
     document.getElementById("e").style.color = colors[currentColor - 2];
     document.getElementById("s").style.color = colors[currentColor - 4];
     document.getElementById("t").style.color = colors[currentColor - 6];
+
+    // Delete the tail if not growing.
+    if (growCount > 0) {
+        growCount--;
+    } else {
+        snake.pop();
+        arena.removeChild(border[border.length - 1]);
+        border.pop();
+        snakeObjects.pop();
+    }
 
     if (isDiscoMode()) {
         snakeObjects.unshift(drawSquare(colors[currentColor], snake[0], ""));
@@ -434,20 +460,12 @@ function moveSnake() {
             snakeObjects = [];
             coveredPositions = [];
             drawWholeSnake();
-            drawSquare(isOldSnakeyMode() ? "green" : "black", foodPosition, "food").id = "food";
+            drawSquare("black", foodPosition, "food").id = "food";
             flashFood = true;
         }
     }
 
-    // Delete the tail if not growing.
-    if (growCount > 0) {
-        growCount--;
-    } else {
-        snake.pop();
-        arena.removeChild(border[border.length - 1]);
-        border.pop();
-        snakeObjects.pop();
-    }
+
     for (let i = 0; i < border.length; i++) {
         border[i].style.zIndex = z;
     }
@@ -533,12 +551,15 @@ function queueTurn(e) {
         }
         moving = !moving;
     }
-
     if (
         e.code == "ArrowUp" ||
         e.code == "ArrowDown" ||
         e.code == "ArrowLeft" ||
-        e.code == "ArrowRight"
+        e.code == "ArrowRight" ||
+        e.code == "KeyW" ||
+        e.code == "KeyA" ||
+        e.code == "KeyS" ||
+        e.code == "KeyD"
     ) {
         e.preventDefault();
         if (moving && turnQueue[0] !== e.code) turnQueue.unshift(e.code);
@@ -550,21 +571,25 @@ function queueTurn(e) {
 function changeDirection(code) {
     switch (code) {
         case "ArrowUp":
+        case "KeyW":
             if (direction != "d") {
                 direction = "u";
             }
             break;
         case "ArrowDown":
+        case "KeyS":
             if (direction != "u") {
                 direction = "d";
             }
             break;
         case "ArrowLeft":
+        case "KeyA":
             if (direction != "r") {
                 direction = "l";
             }
             break;
         case "ArrowRight":
+        case "KeyD":
             if (direction != "l") {
                 direction = "r";
             }
@@ -597,6 +622,7 @@ function startGame() {
     loadRandomImage();
     coveredPositions = [];
     newHighScore = false;
+    cardRevealed = false;
 
     overlay.style.visibility = "hidden";
     endOverlay.style.visibility = "hidden";
@@ -670,13 +696,28 @@ function doubleScore() {
     arena.appendChild(banner);
     banner.id = "double"
     let opacity = 1;
+    let bottom = 0;
     const interval = setInterval(() => {
         if (opacity > 0) {
             opacity -= 0.02;
+            bottom += 0.5;
             banner.style.opacity = opacity;
+            banner.style.bottom = `${bottom}px`;
         } else {
             clearInterval(interval);
             banner.style.display = 'none';
         }
     }, 50);
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const element = document.getElementById("bandcamp-player");
+    let angle = 0;
+    const rotate = () => {
+        angle = (angle + 1) % 360; // Increment angle and keep it within 0-360
+        element.style.setProperty("--angle", `${angle}deg`);
+        requestAnimationFrame(rotate);
+    };
+
+    rotate();
+});

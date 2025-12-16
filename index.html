@@ -51,12 +51,19 @@
       <p id="titleText" style="flex-grow: 1; margin: 5px">
         DISCO JERRY'S SNAKEY SNAKE GAME
       </p>
-
-      <iframe
-        id="bandcamp-player"
-        src="https://bandcamp.com/EmbeddedPlayer/album=807688521/size=small/bgcol=ffffff/linkcol=7137dc/transparent=true/"
-        seamless
-      ></iframe>
+      <div id="bandcamp-player">
+        <iframe
+          style="
+            border: none;
+            width: 82px;
+            height: 42px;
+            overflow: hidden;
+            background-color: white;
+          "
+          src="https://bandcamp.com/EmbeddedPlayer/album=807688521/size=small/bgcol=ffffff/linkcol=7137dc/transparent=true/"
+          seamless
+        ></iframe>
+      </div>
     </div>
     <div style="width: fit-content; margin-inline: auto">
       <div id="arena"></div>
@@ -86,6 +93,12 @@
           "
           class="img_background"
         >
+          <img
+            id="Chorus Holiday Mode"
+            src="chorus_holiday_slug.png"
+            class="pop-over-img"
+            style="display: none"
+          />
           <img
             id="Disco Mode"
             src="snake_outfit.png"
@@ -226,8 +239,12 @@
           "
           class="img_background"
         >
-          <img id="highScore" src="new_high_score.png" class="pop-over-img" />
-          <img id="gameOver" src="game_over.png" class="pop-over-img" />
+          <img
+            id="highScore"
+            src="new_high_score_holiday.png"
+            class="pop-over-img"
+          />
+          <img id="gameOver" src="game_over_holiday.png" class="pop-over-img" />
           <img
             id="Disco Mode"
             src="snake_outfit.png"
