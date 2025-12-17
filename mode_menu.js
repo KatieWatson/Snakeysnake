@@ -1,20 +1,21 @@
 import { gameModeDescriptions, modes, setGameMode, toggleWormholeMode } from "./main.js";
 
 export function buildMenu() {
+
     const menuElements = document.getElementsByClassName("menuList");
     for (let i = 0; i < menuElements.length; i++) {
         let menuElement = menuElements[i];
         let input = document.createElement("input");
         menuElement.appendChild(input);
         input.type = "checkbox";
-        input.id = "wormhole";
-        input.class = "wormholeToggle";
+        input.id = "wormhole${i}";
+        input.classList.add("wormholeToggle");
         input.name = "wormhole";
         input.value = "Wormhole Mode";
         input.onclick = toggleWormholeMode;
         let label = document.createElement("label");
         menuElement.appendChild(label);
-        label.htmlFor = "wormhole";
+        label.htmlFor = "wormhole${i}";
         label.innerHTML = `
               Wormhole Mode
                   <p class="gameModeDescription">where snake knows no bounds</p>`;

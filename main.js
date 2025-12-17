@@ -158,12 +158,13 @@ export function setGameMode(mode) {
 }
 window.setGameMode = setGameMode;
 
-function setWormholeMode(on) {
-    wormholeMode = on;
+function setWormholeMode(isOn) {
+    wormholeMode = isOn;
     localStorage.setItem("wormholeMode", wormholeMode.toString());
     let wormholeToggles = Array.from(document.getElementsByClassName("wormholeToggle"));
     wormholeToggles.forEach(elem => {
         elem.checked = wormholeMode;
+        console.log("checked: ", elem.checked);
     });
     let imgBackgrounds = Array.from(document.getElementsByClassName("img_background"));
     if (wormholeMode) {
