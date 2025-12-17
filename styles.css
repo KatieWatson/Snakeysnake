@@ -183,6 +183,7 @@ label {
     overflow: hidden;
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-shrink: 0;
     z-index: 1000000000;
     background: conic-gradient(from var(--angle, 0), transparent, white 10%, green 36%, transparent 40%)

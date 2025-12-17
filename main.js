@@ -1,20 +1,32 @@
 import { getNextDiscoImage, resetDiscoImages } from "./disco_mode.js";
-// import { buildMenu } from "./mode_menu.js";
+import { buildMenu } from "./mode_menu.js";
 import { drawOldSnakeObstacles } from "./picture_mode/old_snakey.js";
 import { drawPixel, getFullImage, isImageLoading, loadRandomImage, resetPictureModeImages } from "./picture_mode/picture_mode.js";
 
-const queryString = window.location.search;
-const mode = new URLSearchParams(queryString).get("mode");
-
-
 export const modes = {
+    chorusHoliday: "Happy Holidays!",
     disco: "Disco Mode",
     picture: "Picture Mode",
-    plain: "Plain Mode",
     oldSnakey: "Old Snakey",
-    chorusHoliday: "Chorus Holiday Mode"
+    plain: "Plain Mode"
 }
 window.modes = modes;
+
+export const gameModeDescriptions = {
+    chorusHoliday: "uncover every pixel to see a special holiday card!",
+    disco: "fill the board with dazzling designs",
+    picture: "uncover every pixel to reveal a hidden image",
+    oldSnakey: "<span> the game that inspired my snakey obsession </span>\
+                    <span style='color: red; padding-left: 0'\
+                      >[no wormhole mode]</span\
+                    >",
+    plain: "why do we even have this mode?"
+
+};
+
+function keyOfMode(value) {
+    return Object.keys(modes).find(key => modes[key] === value);
+}
 
 let coveredPositions = [];
 let stepsSinceFillingPixel = 0;
@@ -24,11 +36,21 @@ let flashFoodCount = 0;
 let best = 0;
 let cardRevealed = false;
 
-let currentMode = mode ?
-    modes[mode] : localStorage.getItem("selectedMode") != modes.chorusHoliday ?
+
+const queryString = window.location.search;
+const modeFromParams = new URLSearchParams(queryString).get("mode");
+const localStorageMode = localStorage.getItem("selectedMode")
+
+let currentMode = !!modeFromParams && !!modes[modeFromParams] ?
+    modes[modeFromParams] : !!localStorageMode && localStorageMode != modes.chorusHoliday && !!modes[localStorageMode] ?
     localStorage.getItem("selectedMode") : modes.disco;
+
+if (!isHolidayCard()) {
+    delete modes.chorusHoliday;
+}
+
 let wormholeMode = localStorage.getItem("wormholeMode") == "true" ? true : false;
-// buildMenu();
+buildMenu();
 setGameMode(currentMode);
 setWormholeMode(wormholeMode);
 let lastTouchStartInCenter = 0;
@@ -120,8 +142,8 @@ window.getGameMode = getGameMode;
 export function setGameMode(mode) {
     currentMode = mode;
     localStorage.setItem("selectedMode", mode);
-    setRadioValue("gameMode2", mode);
-    setRadioValue("gameMode", mode);
+    setRadioValue("gameMode0", mode);
+    setRadioValue("gameMode1", mode);
     setImages(mode);
     if (isOldSnakeyMode()) {
         disableWormholeMode();
@@ -131,6 +153,8 @@ export function setGameMode(mode) {
             elem.disabled = false;
         });
     }
+    const modeParam = `?mode=${keyOfMode(mode)}`;
+    window.history.pushState({ path: modeParam }, '', modeParam);
 }
 window.setGameMode = setGameMode;
 
@@ -242,10 +266,10 @@ export function isPictureMode() {
     return currentMode == modes.picture || currentMode == modes.chorusHoliday;
 }
 
-export function isHolidayMode() {
-    return true;
+export function isHolidayCard() {
+    return currentMode == modes.chorusHoliday;
 }
-window.isHolidayMode = isHolidayMode;
+window.isHolidayMode = isHolidayCard;
 
 function setScore(newScore) {
     score = newScore;
@@ -420,7 +444,7 @@ function moveSnake() {
             drawWholeSnake();
             drawSquare("black", foodPosition, "food").id = "food";
             coveredPositions = [];
-            if (isHolidayMode()) {
+            if (isHolidayCard()) {
                 cardRevealed = true;
             }
             loadRandomImage();
