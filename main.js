@@ -164,7 +164,6 @@ function setWormholeMode(isOn) {
     let wormholeToggles = Array.from(document.getElementsByClassName("wormholeToggle"));
     wormholeToggles.forEach(elem => {
         elem.checked = wormholeMode;
-        console.log("checked: ", elem.checked);
     });
     let imgBackgrounds = Array.from(document.getElementsByClassName("img_background"));
     if (wormholeMode) {
