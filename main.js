@@ -664,11 +664,11 @@ function startGame() {
     flashFood = false;
     flashFoodCount = 0;
     setArenaSize();
+    cardRevealed = false;
     loadRandomImage();
     coveredPositions = [];
     newHighScore = false;
     cardRevealedCountdown = 0;
-    cardRevealed = false;
 
     overlay.style.visibility = "hidden";
     endOverlay.style.visibility = "hidden";
