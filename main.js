@@ -43,7 +43,7 @@ const localStorageMode = localStorage.getItem("selectedMode")
 
 let currentMode = !!modeFromParams && !!modes[modeFromParams] ?
     modes[modeFromParams] : !!localStorageMode && localStorageMode != modes.chorusHoliday && !!modes[localStorageMode] ?
-    localStorage.getItem("selectedMode") : modes.disco;
+        localStorage.getItem("selectedMode") : modes.disco;
 
 if (!isHolidayCard()) {
     delete modes.chorusHoliday;
@@ -99,7 +99,7 @@ let moving = false;
 let obstacles = [];
 
 setInterval(
-    function() {
+    function () {
         moveSnake();
     },
     isMobileScreen() ? 100 : 75
@@ -224,24 +224,24 @@ export function drawSquare(color, position, type) {
     square.style.width = isBorder ?
         `${blockSize + borderWidth * 2}` :
         isOldSnakeyMode() ? `${blockSize - borderWidth}` :
-        `${blockSize}`;
+            `${blockSize}`;
     square.style.height = isBorder ?
         `${blockSize + borderWidth * 2}` :
         isOldSnakeyMode() ? `${blockSize - borderWidth}` :
-        `${blockSize}`;
+            `${blockSize}`;
     square.style.backgroundColor = color;
     square.style.display = "block";
     square.style.position = "absolute";
     square.style.top = isBorder || (isFood && isPictureMode()) ?
         `${position[1] * blockSize - borderWidth}` :
         isOldSnakeyMode() ?
-        `${position[1] * blockSize + borderWidth/2}` :
-        `${position[1] * blockSize}`;
+            `${position[1] * blockSize + borderWidth / 2}` :
+            `${position[1] * blockSize}`;
     square.style.left = isBorder || (isFood && isPictureMode()) ?
         `${position[0] * blockSize - borderWidth}` :
         isOldSnakeyMode() ?
-        `${position[0] * blockSize + borderWidth/2}` :
-        `${position[0] * blockSize}`;
+            `${position[0] * blockSize + borderWidth / 2}` :
+            `${position[0] * blockSize}`;
     if (!isFood || isDiscoMode()) {
         square.style.zIndex = `${z}`;
     }
@@ -303,8 +303,8 @@ function setFood() {
     const modifier = isPictureMode() ?
         -1 * borderWidth :
         isOldSnakeyMode() ?
-        0.5 * borderWidth :
-        0;
+            0.5 * borderWidth :
+            0;
     food.style.top = `${foodPosition[1] * blockSize + modifier}`;
     food.style.left = `${foodPosition[0] * blockSize + modifier}`;
     food.style.zIndex = isPictureMode() ? 1000000 : z;
@@ -419,7 +419,7 @@ function moveSnake() {
                 stepsSinceFillingPixel = 0;
                 coveredPositions.push(`${snake[0][0]},${snake[0][1]}`);
 
-            } catch (e) {}
+            } catch (e) { }
         } else {
             stepsSinceFillingPixel++;
         }
@@ -448,8 +448,9 @@ function moveSnake() {
             coveredPositions = [];
             if (isHolidayCard()) {
                 cardRevealed = true;
-                Array.from(document.getElementsByClassName("download-card")).forEach((elem) => {elem
-                    .style.display = "block";});
+                Array.from(document.getElementsByClassName("download-card")).forEach((elem) => {
+                    elem.style.display = "block";
+                });
             }
             loadRandomImage();
         }
@@ -533,16 +534,16 @@ function handleTouch(event) {
     if (Math.abs(xInsideElement) > Math.abs(yInsideElement)) {
         // Left or right
         if (xInsideElement < 0) {
-            queueTurn({ code: "ArrowLeft", preventDefault: () => {} });
+            queueTurn({ code: "ArrowLeft", preventDefault: () => { } });
         } else {
-            queueTurn({ code: "ArrowRight", preventDefault: () => {} });
+            queueTurn({ code: "ArrowRight", preventDefault: () => { } });
         }
     } else {
         // Up or down
         if (yInsideElement < 0) {
-            queueTurn({ code: "ArrowUp", preventDefault: () => {} });
+            queueTurn({ code: "ArrowUp", preventDefault: () => { } });
         } else {
-            queueTurn({ code: "ArrowDown", preventDefault: () => {} });
+            queueTurn({ code: "ArrowDown", preventDefault: () => { } });
         }
     }
 }
@@ -642,8 +643,9 @@ function startGame() {
     obstacles = [];
     arena.style.backgroundImage = "none";
     arena.style.backgroundColor = isOldSnakeyMode() ? "white" : "lightslategray";
-    Array.from(document.getElementsByClassName("download-card")).forEach((elem) => {elem
-        .style.display = "none";});
+    Array.from(document.getElementsByClassName("download-card")).forEach((elem) => {
+        elem.style.display = "none";
+    });
     stepsSinceFillingPixel = 0;
     flashing = 0;
     flashFood = false;

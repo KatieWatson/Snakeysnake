@@ -1,12 +1,15 @@
 import { drawSquare, getGameMode, isMobileScreen, modes } from "../main.js";
 const images = ["california", "cows", "lilies", "olive_trees", "starry", "stream", "wave", "wheat", "willows", "yosemite"];
-let remainingImages = [...images];
+const holidayImages = ["alex_levin_2", "alex_levin", "america_windows", "john_leech",
+    "mike_kraus", "myriyevskyy", "trevor_mitchell",
+    "valery_rybakow_2", "valery_rybakow", "viggo_johansen"];
+let remainingImages = [...holidayImages];
 let pixels = [];
 let image = "";
 let imageLoading = false;
 
 export function getFullImage() {
-    return `./picture_mode/${image}_full.jpg`;
+    return `./picture_mode/holiday_pictures/${image}_full.jpg`;
 }
 
 export function isImageLoading() {
@@ -14,7 +17,7 @@ export function isImageLoading() {
 }
 
 export function resetPictureModeImages() {
-    remainingImages = [...images];
+    remainingImages = [...holidayImages];
 }
 
 export function loadRandomImage() {
@@ -23,10 +26,13 @@ export function loadRandomImage() {
     } else {
         image = remainingImages[Math.floor(Math.random() * remainingImages.length)];
         remainingImages = remainingImages.filter(img => img !== image);
+        if (remainingImages.length === 0) {
+            resetPictureModeImages();
+        }
     }
     const img = new Image();
     img.crossOrigin = "anonymous";
-    img.src = `./picture_mode/${image}${isMobileScreen()? "_mobile": ""}.jpg`;
+    img.src = `./picture_mode/holiday_pictures/${image}${isMobileScreen() ? "_mobile" : ""}.jpg`;
 
     const canvas = document.getElementById("canvas");
 
@@ -34,7 +40,7 @@ export function loadRandomImage() {
 
     pixels = [];
 
-    img.onload = function() {
+    img.onload = function () {
         imageLoading = true;
 
         const imageWidth = img.width;

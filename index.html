@@ -1,295 +1,134 @@
 <html>
-  <head>
-    <title>Disco Jerry's Snakey Snake</title>
-    <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="preload" as="image" href="./picture_mode/california_full.jpg" />
-    <link rel="preload" as="image" href="./picture_mode/cows_full.jpg" />
-    <link rel="preload" as="image" href="./picture_mode/lilies_full.jpg" />
-    <link rel="preload" as="image" href="./picture_mode/olive_trees_full.jpg" />
-    <link rel="preload" as="image" href="./picture_mode/starry_full.jpg" />
-    <link rel="preload" as="image" href="./picture_mode/wave_full.jpg" />
-    <link rel="preload" as="image" href="./picture_mode/wheat_full.jpg" />
-    <link rel="preload" as="image" href="./picture_mode/willows_full.jpg" />
-    <link rel="preload" as="image" href="./picture_mode/yosemite_full.jpg" />
-    <link rel="preload" as="image" href="./holiday_background.png" />
-    <link rel="preload" as="image" href="./holiday_background_wormhole.png" />
-    <link
-      rel="preload"
-      as="image"
-      href="./picture_mode/chorus_holiday_card_full.jpg"
-    />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=no"
-    />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="./main.js" type="module"></script>
-  </head>
 
-  <body
-    style="
+<head>
+  <title>Disco Jerry's Snakey Snake</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="preload" as="image" href="./picture_mode/california_full.jpg" />
+  <link rel="preload" as="image" href="./picture_mode/cows_full.jpg" />
+  <link rel="preload" as="image" href="./picture_mode/lilies_full.jpg" />
+  <link rel="preload" as="image" href="./picture_mode/olive_trees_full.jpg" />
+  <link rel="preload" as="image" href="./picture_mode/starry_full.jpg" />
+  <link rel="preload" as="image" href="./picture_mode/wave_full.jpg" />
+  <link rel="preload" as="image" href="./picture_mode/wheat_full.jpg" />
+  <link rel="preload" as="image" href="./picture_mode/willows_full.jpg" />
+  <link rel="preload" as="image" href="./picture_mode/yosemite_full.jpg" />
+  <link rel="preload" as="image" href="./holiday_background.png" />
+  <link rel="preload" as="image" href="./holiday_background_wormhole.png" />
+  <link rel="preload" as="image" href="./picture_mode/chorus_holiday_card_full.jpg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="./main.js" type="module"></script>
+</head>
+
+<body style="
       font-family: 'Courier New', Courier, monospace;
       background-color: #261736;
       color: #e0dae7;
       display: initial;
       overflow: hidden;
-    "
-  >
-    <script src="https://unpkg.com/magic-snowflakes/dist/snowflakes.min.js"></script>
-    <script>
-      var sf = new Snowflakes({
-        color: "#efedf3",
-        count: 75,
-      });
-    </script>
-    <div id="header">
-      <img
-        src="lil_slug.png"
-        style="
+    ">
+  <script src="https://unpkg.com/magic-snowflakes/dist/snowflakes.min.js"></script>
+  <script>
+    var sf = new Snowflakes({
+      color: "#efedf3",
+      count: 75,
+    });
+  </script>
+  <div id="header">
+    <img src="lil_slug.png" style="
           padding-right: 5px;
           height: 2em;
           padding-inline: 3px;
           flex-shrink: 0;
-        "
-        id="headerSlug"
-      />
-      <p id="titleText" style="flex-grow: 1; margin: 5px">
-        DISCO JERRY'S SNAKEY SNAKE GAME
-      </p>
-      <div id="bandcamp-player" style="visibility: hidden">
-        <iframe
-          style="
+        " id="headerSlug" />
+    <p id="titleText" style="flex-grow: 1; margin: 5px">
+      DISCO JERRY'S SNAKEY SNAKE GAME
+    </p>
+    <div id="bandcamp-player" style="visibility: hidden">
+      <iframe style="
             border: none;
             width: 82px;
             height: 42px;
             overflow: hidden;
             background-color: white;
-          "
-          onload="this.parentNode.style.visibility='visible'"
-          src="https://bandcamp.com/EmbeddedPlayer/album=807688521/size=small/bgcol=ffffff/linkcol=7137dc/transparent=true/"
-          seamless
-        ></iframe>
-      </div>
+          " onload="this.parentNode.style.visibility='visible'"
+        src="https://bandcamp.com/EmbeddedPlayer/album=807688521/size=small/bgcol=ffffff/linkcol=7137dc/transparent=true/"
+        seamless></iframe>
     </div>
-    <div id="arenaContainer" style="width: fit-content; margin-inline: auto">
-      <div id="arena"></div>
-      <div style="display: flex">
-        <div style="flex-shrink: 0; min-width: 30%">
-          <span>Score:</span>
-          <span id="score">0</span>
-          <span id="bestScore" style="margin-left: 10px">
-            <span>Best:</span>
-            <span id="best">0</span>
-          </span>
-          <span
-            id="bestBanner"
-            style="margin-left: 10px; display: none; flex-shrink: 0"
-            ><span id="b">B</span>
-            <span id="e">E</span>
-            <span id="s">S</span>
-            <span id="t">T</span></span
-          >
-        </div>
-        <div
-          style="
+  </div>
+  <div id="arenaContainer" style="width: fit-content; margin-inline: auto">
+    <div id="arena"></div>
+    <div style="display: flex">
+      <div style="flex-shrink: 0; min-width: 30%">
+        <span>Score:</span>
+        <span id="score">0</span>
+        <span id="bestScore" style="margin-left: 10px">
+          <span>Best:</span>
+          <span id="best">0</span>
+        </span>
+        <span id="bestBanner" style="margin-left: 10px; display: none; flex-shrink: 0"><span id="b">B</span>
+          <span id="e">E</span>
+          <span id="s">S</span>
+          <span id="t">T</span></span>
+      </div>
+      <div style="
             flex-grow: 1;
             justify-content: center;
             display: flex;
             padding-inline: 5px;
             font-size: larger;
-          "
-        >
-          <!-- <span style="white-space: nowrap">
+          ">
+        <!-- <span style="white-space: nowrap">
             <span>Next image in</span>
             <span style="padding-left: 0.5em">3</span></span
           > -->
-        </div>
-        <div
-          style="
+      </div>
+      <div style="
             flex-shrink: 0;
             min-width: 30%;
             display: flex;
             justify-content: right;
-          "
-        >
-          <a
-            href="./picture_mode/chorus_holiday_card_full.jpg"
-            download
-            class="download-card"
-          >
-            <button style="border-radius: 30px">Download Card</button>
-          </a>
-        </div>
+          ">
+        <a href="./picture_mode/chorus_holiday_card_full.jpg" download class="download-card">
+          <button style="border-radius: 30px">Download Card</button>
+        </a>
       </div>
     </div>
-    <div id="start-screen-overlay" style="color: black">
-      <div class="overlay"></div>
+  </div>
+  <div id="start-screen-overlay" style="color: black">
+    <div class="overlay"></div>
 
-      <div class="popover">
-        <div
-          style="
+    <div class="popover">
+      <div style="
             background-image: url(./holiday_background.png);
             background-size: 100% 100%;
             margin: 5px;
             border-radius: 90px;
-          "
-          class="img_background"
-        >
-          <img
-            id="Happy Holidays!"
-            src="chorus_holiday_slug.png"
-            class="pop-over-img"
-            style="display: none"
-          />
-          <img
-            id="Disco Mode"
-            src="snake_outfit.png"
-            class="pop-over-img"
-            style="display: none; background-image: url('./disco_slug.png')"
-          />
-          <img
-            id="Picture Mode"
-            src="snake_outfit.png"
-            class="pop-over-img"
-            style="
+          " class="img_background">
+        <img id="Happy Holidays!" src="chorus_holiday_slug.png" class="pop-over-img" style="display: none" />
+        <img id="Disco Mode" src="snake_outfit.png" class="pop-over-img"
+          style="display: none; background-image: url('./disco_slug.png')" />
+        <img id="Picture Mode" src="snake_outfit.png" class="pop-over-img" style="
               display: none;
               background-image: url('./picture_slug_cropped.png');
-            "
-          />
-          <img
-            id="Old Snakey"
-            src="snake_outfit.png"
-            class="pop-over-img"
-            style="
+            " />
+        <img id="Old Snakey" src="snake_outfit.png" class="pop-over-img" style="
               display: none;
               background-image: url('./old_snakey_slug.png');
-            "
-          />
-          <img
-            id="Plain Mode"
-            src="snake_outfit.png"
-            class="pop-over-img"
-            style="display: none; background-image: url('./sad_slug.png')"
-          />
-        </div>
-        <div class="popover-text">
-          <div>
-            <div id="padding-right-box">
-              <div style="font-size: 2em">WELCOME</div>
-              <div
-                class="popover-message"
-                style="font-size: 0.8em; padding-bottom: 7px"
-              >
-                to disco jerry's snakey snake arena
-              </div>
-              <div style="width: 100%; display: flex; align-items: center">
-                <button
-                  title="spacebar"
-                  onclick="startGame()"
-                  class="start-button"
-                >
-                  START
-                </button>
-              </div>
-            </div>
-            <div>
-              Select Game Mode:<br />
-              <div class="menuList"></div>
-            </div>
-          </div>
-        </div>
+            " />
+        <img id="Plain Mode" src="snake_outfit.png" class="pop-over-img"
+          style="display: none; background-image: url('./sad_slug.png')" />
       </div>
-    </div>
-    <div id="end-screen-overlay" style="visibility: hidden; color: black">
-      <div class="overlay"></div>
-      <div class="popover">
-        <div
-          style="
-            background-image: url(./holiday_background.png);
-            background-size: 100% 100%;
-            margin: 5px;
-            border-radius: 90px;
-            position: relative;
-          "
-          class="img_background"
-        >
-          <img
-            id="highScore"
-            src="new_high_score_holiday.png"
-            class="pop-over-img"
-          />
-          <img id="gameOver" src="game_over_holiday.png" class="pop-over-img" />
-          <img
-            id="Happy Holidays!"
-            src="chorus_holiday_slug.png"
-            class="pop-over-img"
-            style="display: none"
-          />
-          <img
-            id="Disco Mode"
-            src="snake_outfit.png"
-            class="pop-over-img"
-            style="display: none; background-image: url('./disco_slug.png')"
-          />
-          <img
-            id="Picture Mode"
-            src="snake_outfit.png"
-            class="pop-over-img"
-            style="
-              display: none;
-              background-image: url('./picture_slug_cropped.png');
-            "
-          />
-          <img
-            id="Old Snakey"
-            src="snake_outfit.png"
-            class="pop-over-img"
-            style="
-              display: none;
-              background-image: url('./old_snakey_slug.png');
-            "
-          />
-          <img
-            id="Plain Mode"
-            src="snake_outfit.png"
-            class="pop-over-img"
-            style="display: none; background-image: url('./sad_slug.png')"
-          />
-          <a
-            href="./picture_mode/chorus_holiday_card_full.jpg"
-            download
-            style="
-              position: absolute;
-              bottom: 5px;
-              left: 50%;
-              transform: translate(-50%, 0);
-            "
-            class="download-card"
-          >
-            <button style="border-radius: 30px">Download Card</button>
-          </a>
-        </div>
-        <div class="popover-text">
-          <div>
-            <div id="padding-right-box" style="padding-top: 14px">
-              <div id="finalScore" style="font-size: 2.5em"></div>
-              <div
-                id="scoreTitle"
-                style="
-                  white-space: nowrap;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  font-size: 11px;
-                  margin-top: -0.4em;
-                  margin-bottom: 0.4em;
-                "
-              ></div>
-              <button
-                class="start-button"
-                title="spacebar"
-                onclick="startGame()"
-              >
-                START AGAIN
+      <div class="popover-text">
+        <div>
+          <div id="padding-right-box">
+            <div style="font-size: 2em">WELCOME</div>
+            <div class="popover-message" style="font-size: 0.8em; padding-bottom: 7px">
+              to disco jerry's snakey snake arena
+            </div>
+            <div style="width: 100%; display: flex; align-items: center">
+              <button title="spacebar" onclick="startGame()" class="start-button">
+                START
               </button>
             </div>
           </div>
@@ -300,13 +139,69 @@
         </div>
       </div>
     </div>
-    <div style="width: 100%; justify-content: center; display: flex">
-      <img
-        id="dPad"
-        src="d_pad.png"
-        style="width: 95%; display: none; z-index: 10000"
-      />
+  </div>
+  <div id="end-screen-overlay" style="visibility: hidden; color: black">
+    <div class="overlay"></div>
+    <div class="popover">
+      <div style="
+            background-image: url(./holiday_background.png);
+            background-size: 100% 100%;
+            margin: 5px;
+            border-radius: 90px;
+            position: relative;
+          " class="img_background">
+        <img id="highScore" src="new_high_score_holiday.png" class="pop-over-img" />
+        <img id="gameOver" src="game_over_holiday.png" class="pop-over-img" />
+        <img id="Happy Holidays!" src="chorus_holiday_slug.png" class="pop-over-img" style="display: none" />
+        <img id="Disco Mode" src="snake_outfit.png" class="pop-over-img"
+          style="display: none; background-image: url('./disco_slug.png')" />
+        <img id="Picture Mode" src="snake_outfit.png" class="pop-over-img" style="
+              display: none;
+              background-image: url('./picture_slug_cropped.png');
+            " />
+        <img id="Old Snakey" src="snake_outfit.png" class="pop-over-img" style="
+              display: none;
+              background-image: url('./old_snakey_slug.png');
+            " />
+        <img id="Plain Mode" src="snake_outfit.png" class="pop-over-img"
+          style="display: none; background-image: url('./sad_slug.png')" />
+        <a href="./picture_mode/chorus_holiday_card_full.jpg" download style="
+              position: absolute;
+              bottom: 5px;
+              left: 50%;
+              transform: translate(-50%, 0);
+            " class="download-card">
+          <button style="border-radius: 30px">Download Card</button>
+        </a>
+      </div>
+      <div class="popover-text">
+        <div>
+          <div id="padding-right-box" style="padding-top: 14px">
+            <div id="finalScore" style="font-size: 2.5em"></div>
+            <div id="scoreTitle" style="
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  font-size: 11px; 
+                  margin-top: -0.4em;
+                  margin-bottom: 0.4em;
+                "></div>
+            <button class="start-button" title="spacebar" onclick="startGame()">
+              START AGAIN
+            </button>
+          </div>
+        </div>
+        <div>
+          Select Game Mode:<br />
+          <div class="menuList"></div>
+        </div>
+      </div>
     </div>
-    <canvas id="canvas" style="display: none"></canvas>
-  </body>
+  </div>
+  <div style="width: 100%; justify-content: center; display: flex">
+    <img id="dPad" src="d_pad.png" style="width: 95%; display: none; z-index: 10000" />
+  </div>
+  <canvas id="canvas" style="display: none"></canvas>
+</body>
+
 </html>
