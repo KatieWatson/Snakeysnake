@@ -72,7 +72,6 @@ label {
 }
 
 .start-button {
-    cursor: pointer;
     height: 30px;
     width: 150px;
     border-color: #584963;
@@ -187,4 +186,12 @@ label {
     flex-shrink: 0;
     z-index: 1000000000;
     background: conic-gradient(from var(--angle, 0), transparent, white 10%, green 36%, transparent 40%)
+}
+
+button {
+    cursor: pointer;
+}
+
+.download-card {
+    display: none;
 }

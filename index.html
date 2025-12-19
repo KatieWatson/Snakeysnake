@@ -56,7 +56,7 @@
       <p id="titleText" style="flex-grow: 1; margin: 5px">
         DISCO JERRY'S SNAKEY SNAKE GAME
       </p>
-      <div id="bandcamp-player">
+      <div id="bandcamp-player" style="visibility: hidden">
         <iframe
           style="
             border: none;
@@ -65,25 +65,62 @@
             overflow: hidden;
             background-color: white;
           "
+          onload="this.parentNode.style.visibility='visible'"
           src="https://bandcamp.com/EmbeddedPlayer/album=807688521/size=small/bgcol=ffffff/linkcol=7137dc/transparent=true/"
           seamless
         ></iframe>
       </div>
     </div>
-    <div style="width: fit-content; margin-inline: auto">
+    <div id="arenaContainer" style="width: fit-content; margin-inline: auto">
       <div id="arena"></div>
-      <span>Score:</span>
-      <span id="score">0</span>
-      <span id="bestScore" style="margin-left: 10px">
-        <span>Best:</span>
-        <span id="best">0</span>
-      </span>
-      <span id="bestBanner" style="margin-left: 10px; display: none"
-        ><span id="b">B</span>
-        <span id="e">E</span>
-        <span id="s">S</span>
-        <span id="t">T</span></span
-      >
+      <div style="display: flex">
+        <div style="flex-shrink: 0; min-width: 30%">
+          <span>Score:</span>
+          <span id="score">0</span>
+          <span id="bestScore" style="margin-left: 10px">
+            <span>Best:</span>
+            <span id="best">0</span>
+          </span>
+          <span
+            id="bestBanner"
+            style="margin-left: 10px; display: none; flex-shrink: 0"
+            ><span id="b">B</span>
+            <span id="e">E</span>
+            <span id="s">S</span>
+            <span id="t">T</span></span
+          >
+        </div>
+        <div
+          style="
+            flex-grow: 1;
+            justify-content: center;
+            display: flex;
+            padding-inline: 5px;
+            font-size: larger;
+          "
+        >
+          <!-- <span style="white-space: nowrap">
+            <span>Next image in</span>
+            <span style="padding-left: 0.5em">3</span></span
+          > -->
+        </div>
+        <div
+          style="
+            flex-shrink: 0;
+            min-width: 30%;
+            display: flex;
+            justify-content: right;
+          "
+        >
+          <a
+            href="./picture_mode/chorus_holiday_card_full.jpg"
+            download
+            class="download-card"
+          >
+            <button style="border-radius: 30px">Download Card</button>
+          </a>
+        </div>
+      </div>
     </div>
     <div id="start-screen-overlay" style="color: black">
       <div class="overlay"></div>
@@ -172,6 +209,7 @@
             background-size: 100% 100%;
             margin: 5px;
             border-radius: 90px;
+            position: relative;
           "
           class="img_background"
         >
@@ -217,6 +255,19 @@
             class="pop-over-img"
             style="display: none; background-image: url('./sad_slug.png')"
           />
+          <a
+            href="./picture_mode/chorus_holiday_card_full.jpg"
+            download
+            style="
+              position: absolute;
+              bottom: 5px;
+              left: 50%;
+              transform: translate(-50%, 0);
+            "
+            class="download-card"
+          >
+            <button style="border-radius: 30px">Download Card</button>
+          </a>
         </div>
         <div class="popover-text">
           <div>
@@ -225,7 +276,10 @@
               <div
                 id="scoreTitle"
                 style="
-                  font-size: 0.9em;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  font-size: 11px;
                   margin-top: -0.4em;
                   margin-bottom: 0.4em;
                 "
@@ -250,7 +304,7 @@
       <img
         id="dPad"
         src="d_pad.png"
-        style="width: inherit; display: none; z-index: 10000"
+        style="width: 95%; display: none; z-index: 10000"
       />
     </div>
     <canvas id="canvas" style="display: none"></canvas>

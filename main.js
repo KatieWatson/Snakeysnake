@@ -59,6 +59,7 @@ let score = 0;
 let arenaWidth = isMobileScreen() ? 50 : 75;
 let arenaHeight = isMobileScreen() ? 30 : 40;
 const arena = document.getElementById("arena");
+const arenaContainer = document.getElementById("arenaContainer");
 const overlay = document.getElementById("start-screen-overlay");
 const endOverlay = document.getElementById("end-screen-overlay");
 let z = 3;
@@ -106,6 +107,7 @@ setInterval(
 
 arena.style.width = `${arenaWidth * blockSize}`;
 arena.style.height = `${arenaHeight * blockSize}`;
+arenaContainer.style.width = `${arenaWidth * blockSize + 6}`;
 
 function getScoreTitle() {
     return (isMobileScreen() ? "mobile-" : "") + (wormholeMode ? "wormhole-" : "") + getGameMode();
@@ -446,6 +448,8 @@ function moveSnake() {
             coveredPositions = [];
             if (isHolidayCard()) {
                 cardRevealed = true;
+                Array.from(document.getElementsByClassName("download-card")).forEach((elem) => {elem
+                    .style.display = "block";});
             }
             loadRandomImage();
         }
@@ -638,6 +642,8 @@ function startGame() {
     obstacles = [];
     arena.style.backgroundImage = "none";
     arena.style.backgroundColor = isOldSnakeyMode() ? "white" : "lightslategray";
+    Array.from(document.getElementsByClassName("download-card")).forEach((elem) => {elem
+        .style.display = "none";});
     stepsSinceFillingPixel = 0;
     flashing = 0;
     flashFood = false;
