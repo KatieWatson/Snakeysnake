@@ -1,4 +1,4 @@
-import { drawSquare, getGameMode, isMobileScreen, modes } from "../main.js";
+import { drawSquare, getCardRevealed, getGameMode, isMobileScreen, modes } from "../main.js";
 const images = ["california", "cows", "lilies", "olive_trees", "starry", "stream", "wave", "wheat", "willows", "yosemite"];
 const holidayImages = ["alex_levin_2", "alex_levin", "america_windows", "john_leech",
     "mike_kraus", "myriyevskyy", "trevor_mitchell",
@@ -21,7 +21,7 @@ export function resetPictureModeImages() {
 }
 
 export function loadRandomImage() {
-    if (getGameMode() == modes.chorusHoliday) {
+    if (getGameMode() == modes.chorusHoliday && !getCardRevealed()) {
         image = "chorus_holiday_card";
     } else {
         image = remainingImages[Math.floor(Math.random() * remainingImages.length)];

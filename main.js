@@ -34,6 +34,7 @@ let flashing = 0;
 let flashFood = false;
 let flashFoodCount = 0;
 let best = 0;
+let cardRevealedCountdown = 0;
 let cardRevealed = false;
 
 
@@ -140,6 +141,10 @@ export function getGameMode() {
     return currentMode;
 }
 window.getGameMode = getGameMode;
+
+export function getCardRevealed() {
+    return cardRevealed;
+}
 
 export function setGameMode(mode) {
     currentMode = mode;
@@ -411,7 +416,7 @@ function moveSnake() {
         setScore(score + 10);
         setFood();
     }
-    if (isPictureMode() && !cardRevealed) {
+    if (isPictureMode() && !cardRevealedCountdown) {
         if (coveredPositions.length < arenaHeight * arenaWidth &&
             !coveredPositions.includes(`${snake[0][0]},${snake[0][1]}`)) {
             try {
@@ -446,8 +451,16 @@ function moveSnake() {
             drawWholeSnake();
             drawSquare("black", foodPosition, "food").id = "food";
             coveredPositions = [];
-            if (isHolidayCard()) {
+            if (isHolidayCard() && !cardRevealed) {
+                cardRevealedCountdown = 5;
                 cardRevealed = true;
+                const interval = setInterval(() => {
+                    if (cardRevealedCountdown > 0) {
+                        cardRevealedCountdown--;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, 1000);
                 Array.from(document.getElementsByClassName("download-card")).forEach((elem) => {
                     elem.style.display = "block";
                 });
@@ -654,6 +667,7 @@ function startGame() {
     loadRandomImage();
     coveredPositions = [];
     newHighScore = false;
+    cardRevealedCountdown = 0;
     cardRevealed = false;
 
     overlay.style.visibility = "hidden";
