@@ -758,10 +758,14 @@ function doubleScore() {
 
 document.addEventListener("DOMContentLoaded", () => {
     const element = document.getElementById("bandcamp-player");
+    const buttons = Array.from(document.getElementsByClassName("start-button-container"));
     let angle = 0;
     const rotate = () => {
         angle = (angle + 1) % 360; // Increment angle and keep it within 0-360
         element.style.setProperty("--angle", `${angle}deg`);
+        buttons.forEach(button => {
+            button.style.setProperty("--angle", `${angle * 2}deg`);
+        });
         requestAnimationFrame(rotate);
     };
 

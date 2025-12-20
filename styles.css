@@ -74,13 +74,10 @@ label {
 .start-button {
     height: 30px;
     width: 150px;
-    border-color: #584963;
     border-radius: 30px;
-    box-shadow: none;
+    border: none;
     color: white;
     background-color: #5a3973;
-    margin: auto;
-    margin-bottom: 10px;
 }
 
 .gameModeDescription {
@@ -194,4 +191,25 @@ button {
 
 .download-card {
     display: none;
+}
+
+.start-button-container{
+    background: conic-gradient(
+  from var(--angle, 0),transparent,
+  #FF5733 5% 10%,
+  #FFC300 15% 20%,
+  #DAF7A6 25% 30%,
+  #33C1FF 35% 40%,
+  #2E86C1 45% 50%,
+  #8E44AD 55% 60%,
+  transparent 65%
+);
+    border-radius: 30px;
+    height: 30px;
+    width: 150px;
+    box-shadow: none;
+    color: white;
+    margin: auto;
+    margin-bottom: 10px;
+    padding: 3px;
 }
