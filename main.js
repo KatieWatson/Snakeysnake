@@ -764,7 +764,7 @@ document.addEventListener("DOMContentLoaded", () => {
         angle = (angle + 1) % 360; // Increment angle and keep it within 0-360
         element.style.setProperty("--angle", `${angle}deg`);
         buttons.forEach(button => {
-            button.style.setProperty("--angle", `${angle * 2}deg`);
+            button.style.setProperty("--angle", `${angle}deg`);
         });
         requestAnimationFrame(rotate);
     };
