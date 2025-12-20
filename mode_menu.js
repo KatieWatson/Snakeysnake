@@ -34,9 +34,12 @@ export function buildMenu() {
             label.htmlFor = mode;
             label.innerHTML = `
             ${modes[mode]}
-                  <p class="gameModeDescription">
+                  <p class="gameModeDescription" >
                     ${gameModeDescriptions[mode]}
                   </p>`;
         }
+        const padding = document.createElement("div");
+        menuElement.appendChild(padding);
+        padding.classList.add("menuPadding");
     }
 }

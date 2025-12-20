@@ -108,6 +108,10 @@ label {
     flex-direction: column;
 }
 
+.menuPadding {
+    height: 10px;
+}
+
 @media (max-width: 800px) {
     .popover {
         top: 10%;
@@ -143,6 +147,10 @@ label {
 
     .img_background {
         width: -webkit-fill-available;
+    }
+
+    .menuPadding {
+        height: 30px;
     }
 }
 
