@@ -108,7 +108,6 @@ setInterval(
 
 arena.style.width = `${arenaWidth * blockSize}`;
 arena.style.height = `${arenaHeight * blockSize}`;
-arenaContainer.style.width = `${arenaWidth * blockSize + 6}`;
 
 const endScreenPopover = document.getElementById('end-screen-popover');
 
