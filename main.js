@@ -143,7 +143,7 @@ endScreenPopover.addEventListener('click', function (event) {
     }
 });
 
-document.getElementById("toggle-dash").addEventListener("click", () => { togglePopoverMinimized(); event.stopPropagation(); });
+document.getElementById("minimize-dash-container").addEventListener("click", () => { togglePopoverMinimized(); event.stopPropagation(); });
 
 function getScoreTitle() {
     return (isMobileScreen() ? "mobile-" : "") + (wormholeMode ? "wormhole-" : "") + getGameMode();
