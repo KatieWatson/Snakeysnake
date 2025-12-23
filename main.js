@@ -36,7 +36,7 @@ let flashFoodCount = 0;
 let best = 0;
 let cardRevealedCountdown = 0;
 let cardRevealed = false;
-
+let popoverMinimized = false;
 
 const queryString = window.location.search;
 const modeFromParams = new URLSearchParams(queryString).get("mode");
@@ -62,6 +62,7 @@ let arenaHeight = isMobileScreen() ? 30 : 40;
 const arena = document.getElementById("arena");
 const arenaContainer = document.getElementById("arenaContainer");
 const overlay = document.getElementById("start-screen-overlay");
+const endScreen = document.getElementById("end-screen");
 const endOverlay = document.getElementById("end-screen-overlay");
 let z = 3;
 let blockSize = -1;
@@ -108,6 +109,41 @@ setInterval(
 arena.style.width = `${arenaWidth * blockSize}`;
 arena.style.height = `${arenaHeight * blockSize}`;
 arenaContainer.style.width = `${arenaWidth * blockSize + 6}`;
+
+const endScreenPopover = document.getElementById('end-screen-popover');
+
+function minimizePopover() {
+    endOverlay.style.opacity = '0%';
+    endScreenPopover.style.top = `95%`;
+    popoverMinimized = true;
+}
+
+function raisePopover() {
+    endOverlay.style.opacity = '80%';
+    endScreenPopover.style.top = `${window.innerWidth < 800 ? 10 : 15}%`;
+    popoverMinimized = false;
+}
+
+function togglePopoverMinimized() {
+    if (popoverMinimized) {
+        raisePopover();
+        return;
+    }
+    minimizePopover();
+
+}
+window.togglePopoverMinimized = togglePopoverMinimized;
+
+endOverlay.addEventListener('click', togglePopoverMinimized);
+
+endScreenPopover.addEventListener('click', function (event) {
+    if (popoverMinimized) {
+        raisePopover();
+        popoverMinimized = false;
+    }
+});
+
+document.getElementById("toggle-dash").addEventListener("click", () => { togglePopoverMinimized(); event.stopPropagation(); });
 
 function getScoreTitle() {
     return (isMobileScreen() ? "mobile-" : "") + (wormholeMode ? "wormhole-" : "") + getGameMode();
@@ -201,7 +237,7 @@ export function isMobileScreen() {
         /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(
             userAgent
         ) || /android|ipad|playbook|silk/i.test(userAgent)
-    );
+    ) && window.innerWidth <= window.innerHeight;
 }
 
 function listIncludesPoint(pointsList, point) {
@@ -399,7 +435,7 @@ function moveSnake() {
             snake[0][1] < 0 ||
             snake[0][1] > arenaHeight - 1) && !wormholeMode) ||
         obstacles.includes(`(${snake[0][0]}, ${snake[0][1]})`)) {
-        endScreen();
+        triggerEndScreen();
         return;
     }
 
@@ -664,10 +700,11 @@ function startGame() {
     cardRevealedCountdown = 0;
 
     overlay.style.visibility = "hidden";
-    endOverlay.style.visibility = "hidden";
+    endScreen.style.visibility = "hidden";
     setScore(0);
     document.getElementById("bestScore").style.display = "inline";
     document.getElementById("bestBanner").style.display = "none";
+    raisePopover();
     foodPosition = [];
     z = 10;
     turnQueue = [];
@@ -713,7 +750,7 @@ function setArenaSize() {
     arena.style.height = `${arenaHeight * blockSize}`;
 }
 
-function endScreen() {
+function triggerEndScreen() {
     document.getElementById("finalScore").innerText = `${score}`;
     setImages("");
     if (newHighScore) {
@@ -723,7 +760,7 @@ function endScreen() {
         document.getElementById("highScore").style.display = "none";
         document.getElementById("gameOver").style.display = "flex";
     }
-    endOverlay.style.visibility = "visible";
+    endScreen.style.visibility = "visible";
     moving = false;
     activeGame = false;
 }

@@ -105,7 +105,7 @@
       </div>
     </div>
   </div>
-  <div id="start-screen-overlay" style="color: black">
+  <div id="start-screen-overlay" style="color: #100918">
     <div class="overlay"></div>
 
     <div class="popover">
@@ -146,12 +146,10 @@
       </div>
     </div>
   </div>
-  <div id="end-screen-overlay" style="visibility: hidden; color: black">
-    <div class="overlay"></div>
-    <div class="popover">
+  <div id="end-screen" style="visibility: hidden; color: #100918">
+    <div id="end-screen-overlay" class="overlay"></div>
+    <div id="end-screen-popover" class="popover">
       <div class="img-container">
-
-
         <img id="background" src="holiday_background.png" class="pop-over-img" />
         <img id="background-wormhole" src="holiday_background_wormhole.png" class="pop-over-img" />
         <img id="Happy Holidays!" src="chorus_holiday_slug.png" class="pop-over-img" style="display: none" />
@@ -172,6 +170,26 @@
             ">
           <button style="border-radius: 30px" class="download-card">Download Card</button>
         </a>
+        <div style="
+          position: absolute;
+          top: 5px;
+          left: 50%;
+          width: 35px;
+          height: 13px;    
+          cursor: pointer;
+          transform: translate(-50%, 0);" id="toggle-dash">
+          <div style=" 
+            border-radius: 1000px;
+            background-color: #e0dae7;
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            width: 25px;
+            height: 3px;
+            transform: translate(-50%, 0);
+            opacity: 80%;">
+          </div>
+        </div>
       </div>
       <div class="popover-text">
         <div>
