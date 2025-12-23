@@ -69,7 +69,6 @@ let borderWidth = -1;
 setArenaSize();
 
 const dPad = document.getElementById("dPad");
-
 if (isMobileScreen()) {
     dPad.style.display = "block";
 } else {
@@ -129,7 +128,10 @@ function setImages(selectedMode) {
     const images = Array.from(document.getElementsByClassName("pop-over-img"));
 
     images.forEach(image => {
-        if (image.id === selectedMode) {
+        if (image.id === selectedMode ||
+            (image.id == "background" && !wormholeMode) ||
+            (image.id == "background-wormhole" && wormholeMode) ||
+            (image.id == "holiday_outfit" && currentMode != modes.chorusHoliday)) {
             image.style.display = "block";
         } else {
             image.style.display = "none";
@@ -172,16 +174,7 @@ function setWormholeMode(isOn) {
     wormholeToggles.forEach(elem => {
         elem.checked = wormholeMode;
     });
-    let imgBackgrounds = Array.from(document.getElementsByClassName("img_background"));
-    if (wormholeMode) {
-        imgBackgrounds.forEach(elem => {
-            elem.style.backgroundImage = `url('holiday_background_wormhole.png')`;
-        });
-    } else {
-        imgBackgrounds.forEach(elem => {
-            elem.style.backgroundImage = `url('holiday_background.png')`;
-        });
-    }
+    setImages(currentMode);
 }
 
 function disableWormholeMode() {

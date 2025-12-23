@@ -61,7 +61,7 @@
             height: 42px;
             overflow: hidden;
             background-color: white;
-          " onload="this.parentNode.style.visibility='visible'"
+            " onload="this.parentNode.style.visibility='visible'"
         src="https://bandcamp.com/EmbeddedPlayer/album=807688521/size=small/bgcol=ffffff/linkcol=7137dc/transparent=true/"
         seamless></iframe>
     </div>
@@ -109,25 +109,19 @@
     <div class="overlay"></div>
 
     <div class="popover">
-      <div style="
-            background-image: url(./holiday_background.png);
-            background-size: 100% 100%;
-            margin: 5px;
-            border-radius: 90px;
-          " class="img_background">
+      <div class="img-container">
+
+        <img id="background" src="holiday_background.png" class="pop-over-img" />
+        <img id="background-wormhole" src="holiday_background_wormhole.png" class="pop-over-img" />
         <img id="Happy Holidays!" src="chorus_holiday_slug.png" class="pop-over-img" style="display: none" />
-        <img id="Disco Mode" src="snake_outfit.png" class="pop-over-img"
-          style="display: none; background-image: url('./disco_slug.png')" />
-        <img id="Picture Mode" src="snake_outfit.png" class="pop-over-img" style="
-              display: none;
-              background-image: url('./picture_slug_cropped.png');
-            " />
-        <img id="Old Snakey" src="snake_outfit.png" class="pop-over-img" style="
-              display: none;
-              background-image: url('./old_snakey_slug.png');
-            " />
-        <img id="Plain Mode" src="snake_outfit.png" class="pop-over-img"
-          style="display: none; background-image: url('./sad_slug.png')" />
+        <img id="Disco Mode" src="disco_slug.png" class="pop-over-img" style="display: none;" />
+        <img id="Picture Mode" src="picture_slug_cropped.png" class="pop-over-img" style="
+              display: none;" />
+        <img id="Old Snakey" src="old_snakey_slug.png" class="pop-over-img" style="
+              display: none;" />
+        <img id="Plain Mode" src="sad_slug.png" class="pop-over-img" style="display: none;" />
+        <img id="holiday_outfit" src="snake_outfit.png" class="pop-over-img" />
+
       </div>
       <div class="popover-text">
         <div>
@@ -155,28 +149,21 @@
   <div id="end-screen-overlay" style="visibility: hidden; color: black">
     <div class="overlay"></div>
     <div class="popover">
-      <div style="
-            background-image: url(./holiday_background.png);
-            background-size: 100% 100%;
-            margin: 5px;
-            border-radius: 90px;
-            position: relative;
-          " class="img_background">
+      <div class="img-container">
+
+
+        <img id="background" src="holiday_background.png" class="pop-over-img" />
+        <img id="background-wormhole" src="holiday_background_wormhole.png" class="pop-over-img" />
+        <img id="Happy Holidays!" src="chorus_holiday_slug.png" class="pop-over-img" style="display: none" />
+        <img id="Disco Mode" src="disco_slug.png" class="pop-over-img" style="display: none;" />
+        <img id="Picture Mode" src="picture_slug_cropped.png" class="pop-over-img" style="
+              display: none;" />
+        <img id="Old Snakey" src="old_snakey_slug.png" class="pop-over-img" style="
+              display: none;" />
+        <img id="Plain Mode" src="sad_slug.png" class="pop-over-img" style="display: none;" />
+        <img id="holiday_outfit" src="snake_outfit.png" class="pop-over-img" />
         <img id="highScore" src="new_high_score_holiday.png" class="pop-over-img" />
         <img id="gameOver" src="game_over_holiday.png" class="pop-over-img" />
-        <img id="Happy Holidays!" src="chorus_holiday_slug.png" class="pop-over-img" style="display: none" />
-        <img id="Disco Mode" src="snake_outfit.png" class="pop-over-img"
-          style="display: none; background-image: url('./disco_slug.png')" />
-        <img id="Picture Mode" src="snake_outfit.png" class="pop-over-img" style="
-              display: none;
-              background-image: url('./picture_slug_cropped.png');
-            " />
-        <img id="Old Snakey" src="snake_outfit.png" class="pop-over-img" style="
-              display: none;
-              background-image: url('./old_snakey_slug.png');
-            " />
-        <img id="Plain Mode" src="snake_outfit.png" class="pop-over-img"
-          style="display: none; background-image: url('./sad_slug.png')" />
         <a href="./picture_mode/holiday_pictures/chorus_holiday_card_full.jpg" download style="
               position: absolute;
               bottom: 5px;
