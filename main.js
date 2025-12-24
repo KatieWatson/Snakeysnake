@@ -60,21 +60,21 @@ let score = 0;
 let arenaWidth = isMobileScreen() ? 50 : 75;
 let arenaHeight = isMobileScreen() ? 30 : 40;
 const arena = document.getElementById("arena");
-const arenaContainer = document.getElementById("arenaContainer");
 const overlay = document.getElementById("start-screen-overlay");
 const endScreen = document.getElementById("end-screen");
 const endOverlay = document.getElementById("end-screen-overlay");
 let z = 3;
 let blockSize = -1;
 let borderWidth = -1;
-setArenaSize();
-
 const dPad = document.getElementById("dPad");
 if (isMobileScreen()) {
     dPad.style.display = "block";
 } else {
     dPad.style.display = "none";
 }
+setArenaSize();
+
+
 
 let centerX = ~~(arenaWidth / 2);
 let centerY = ~~(arenaHeight / 2);
@@ -736,7 +736,7 @@ window.startGame = startGame;
 
 function setArenaSize() {
     blockSize = isMobileScreen() ?
-        Math.floor((window.innerWidth - 4) / arenaWidth) :
+        Math.floor((window.innerWidth - 14) / arenaWidth) :
         Math.floor(
             Math.min(
                 (window.innerWidth - 20) / arenaWidth,
@@ -747,6 +747,9 @@ function setArenaSize() {
     borderWidth = Math.max(Math.floor(blockSize / 4), 1);
     arena.style.width = `${arenaWidth * blockSize}`;
     arena.style.height = `${arenaHeight * blockSize}`;
+    const rect = document.getElementById("arenaContainer").getBoundingClientRect();
+    const availableHeight = window.innerHeight - rect.bottom;
+    dPad.style.height = `${Math.min(availableHeight - 20, rect.width)}px`;
 }
 
 function triggerEndScreen() {
