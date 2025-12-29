@@ -315,11 +315,9 @@ export function getArenaDimensions() {
 
 export function isMobileScreen() {
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    return (
-        /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(
-            userAgent
-        ) || /android|ipad|playbook|silk/i.test(userAgent)
-    ) && window.innerWidth <= window.innerHeight;
+    const isMobileUA = /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(userAgent);
+    const isIpadOS = /Macintosh/i.test(userAgent) && navigator.maxTouchPoints && navigator.maxTouchPoints > 1;
+    return (isMobileUA || isIpadOS) && window.innerWidth <= window.innerHeight;
 }
 
 function listIncludesPoint(pointsList, point) {
