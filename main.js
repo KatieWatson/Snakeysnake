@@ -43,8 +43,8 @@ const modeFromParams = new URLSearchParams(queryString).get("mode");
 const localStorageMode = localStorage.getItem("selectedMode")
 
 let currentMode = !!modeFromParams && !!modes[modeFromParams] ?
-    modes[modeFromParams] : !!localStorageMode && localStorageMode != modes.chorusHoliday && !!modes[localStorageMode] ?
-        localStorage.getItem("selectedMode") : modes.disco;
+    modes[modeFromParams] : !!localStorageMode && localStorageMode != modes.chorusHoliday && !!keyOfMode(localStorageMode) ?
+        localStorageMode : modes.disco;
 
 if (!isHolidayCard()) {
     delete modes.chorusHoliday;
