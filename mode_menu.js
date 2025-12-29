@@ -1,4 +1,4 @@
-import { gameModeDescriptions, modes, setGameMode, toggleWormholeMode } from "./main.js";
+import { gameModeDescriptions, modes, setGameMode, toggleWormholeMode, toggleSnailMode, getSnailMode } from "./main.js";
 
 export function buildMenu() {
 
@@ -19,6 +19,24 @@ export function buildMenu() {
         label.innerHTML = `
               Wormhole Mode
                   <p class="gameModeDescription">where snake knows no bounds</p>`;
+
+        if (getSnailMode()) {
+            let snailInput = document.createElement("input");
+            menuElement.appendChild(snailInput);
+            snailInput.type = "checkbox";
+            snailInput.id = "snail${i}";
+            snailInput.classList.add("snailToggle");
+            snailInput.name = "snail";
+            snailInput.value = "Snail Mode";
+            snailInput.onclick = toggleSnailMode;
+            let snailLabel = document.createElement("label");
+            menuElement.appendChild(snailLabel);
+            snailLabel.htmlFor = "snail${i}";
+            snailLabel.innerHTML = `
+                        Snail Mode
+                            <p class="gameModeDescription">a.k.a. "melissa mode"</p>`;
+        }
+
         for (let mode of Object.keys(modes)) {
             input = document.createElement("input");
             menuElement.appendChild(input);

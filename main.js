@@ -21,7 +21,6 @@ export const gameModeDescriptions = {
                       >[no wormhole mode]</span\
                     >",
     plain: "why do we even have this mode?"
-
 };
 
 function keyOfMode(value) {
@@ -39,6 +38,7 @@ let cardRevealed = false;
 let popoverMinimized = false;
 
 const queryString = window.location.search;
+
 const modeFromParams = new URLSearchParams(queryString).get("mode");
 const localStorageMode = localStorage.getItem("selectedMode")
 
@@ -51,9 +51,7 @@ if (!isHolidayCard()) {
 }
 
 let wormholeMode = localStorage.getItem("wormholeMode") == "true" ? true : false;
-buildMenu();
-setGameMode(currentMode);
-setWormholeMode(wormholeMode);
+
 let lastTouchStartInCenter = 0;
 let newHighScore = false;
 let score = 0;
@@ -99,12 +97,34 @@ let moving = false;
 
 let obstacles = [];
 
-setInterval(
+let baseInterval = isMobileScreen() ? 100 : 75;
+let interval = setInterval(
     function () {
         moveSnake();
     },
-    isMobileScreen() ? 100 : 75
+    baseInterval
 );
+
+const snailModeFromParams = new URLSearchParams(queryString).get("snailMode");
+const localStorageHasSnailMode = !!localStorage.getItem("snailMode");
+const localStorageSnailMode = localStorage.getItem("snailMode") == "true" ? true : false;
+
+let snailMode = snailModeFromParams !== null ? true :
+    localStorageHasSnailMode && localStorageSnailMode ? true :
+        false;
+
+
+let snailModeSpeed = !!localStorage.getItem("snailModeSpeed") ? localStorage.getItem("snailModeSpeed") : 50;
+
+let snailSlider = document.getElementById("snailModeSlider");
+let snailSliderInput = document.getElementById("snailModeSliderInput");
+snailSliderInput.addEventListener("change", (event) => setSnailModeSpeed(event.target.value));
+snailSliderInput.value = snailModeSpeed;
+
+buildMenu();
+setSnailMode(snailMode);
+setGameMode(currentMode);
+setWormholeMode(wormholeMode);
 
 arena.style.width = `${arenaWidth * blockSize}`;
 arena.style.height = `${arenaHeight * blockSize}`;
@@ -145,7 +165,18 @@ endScreenPopover.addEventListener('click', function (event) {
 document.getElementById("minimize-dash-container").addEventListener("click", () => { togglePopoverMinimized(); event.stopPropagation(); });
 
 function getScoreTitle() {
-    return (isMobileScreen() ? "mobile-" : "") + (wormholeMode ? "wormhole-" : "") + getGameMode();
+    return (isMobileScreen() ? "mobile-" : "") +
+        (wormholeMode ? "wormhole-" : "") +
+        (snailMode ? "snail-" : "") +
+        getGameMode();
+}
+
+function setQueryParams() {
+    const modeParam = `?mode=${keyOfMode(currentMode)}` +
+        (snailMode ? "&snailMode" : "");
+    window.history.pushState({
+        path: modeParam
+    }, '', modeParam);
 }
 
 function setRadioValue(groupName, valueToSelect) {
@@ -166,7 +197,9 @@ function setImages(selectedMode) {
         if (image.id === selectedMode ||
             (image.id == "background" && !wormholeMode) ||
             (image.id == "background-wormhole" && wormholeMode) ||
-            (image.id == "holiday_outfit" && currentMode != modes.chorusHoliday)) {
+            (image.id == "holiday_outfit" && currentMode != modes.chorusHoliday) ||
+            (image.id == "snail_shell" && snailMode && currentMode == modes.chorusHoliday) ||
+            (image.id == "snail_shell_costume" && snailMode && currentMode != modes.chorusHoliday)) {
             image.style.display = "block";
         } else {
             image.style.display = "none";
@@ -197,8 +230,7 @@ export function setGameMode(mode) {
             elem.disabled = false;
         });
     }
-    const modeParam = `?mode=${keyOfMode(mode)}`;
-    window.history.pushState({ path: modeParam }, '', modeParam);
+    setQueryParams();
 }
 window.setGameMode = setGameMode;
 
@@ -222,9 +254,60 @@ function disableWormholeMode() {
 
 export function toggleWormholeMode() {
     setWormholeMode(!wormholeMode);
-    setImages(currentMode);
 }
 window.toggleWormholeMode = toggleWormholeMode;
+
+function setSnailMode(isOn) {
+    snailMode = isOn;
+    let snailToggles = Array.from(document.getElementsByClassName("snailToggle"));
+    snailToggles.forEach(elem => {
+        elem.checked = snailMode;
+    });
+    if (snailMode) {
+        setSpeed(snailModeSpeed);
+        snailSlider.style.display = "block";
+    } else {
+        setMoveInterval(baseInterval);
+        snailSlider.style.display = "none";
+    }
+    localStorage.setItem("snailMode", snailMode.toString());
+    setQueryParams();
+    setImages(currentMode);
+}
+
+export function getSnailMode() {
+    return snailMode;
+}
+
+export function toggleSnailMode() {
+    setSnailMode(!snailMode);
+}
+window.toggleSnailMode = toggleSnailMode;
+
+function setSpeed(speedValue) {
+    const minIntervalDivisor = isMobileScreen() ? 54 : 40;
+    const maxIntervalDivisor = 100;
+    const sliderWidth = 100;
+
+    const divisor = minIntervalDivisor + speedValue * ((maxIntervalDivisor - minIntervalDivisor) / sliderWidth);
+    setMoveInterval(baseInterval / divisor * 100);
+}
+
+function setSnailModeSpeed(num) {
+    snailModeSpeed = num;
+    setSpeed(snailModeSpeed);
+    localStorage.setItem("snailModeSpeed", snailModeSpeed);
+}
+
+function setMoveInterval(num) {
+    clearInterval(interval);
+    interval = setInterval(
+        function () {
+            moveSnake();
+        },
+        num
+    );
+}
 
 export function getArenaDimensions() {
     return { width: arenaWidth, height: arenaHeight };
