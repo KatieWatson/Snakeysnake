@@ -57,8 +57,9 @@ let newHighScore = false;
 let score = 0;
 let arenaWidth = isMobileScreen() ? 50 : 75;
 let arenaHeight = isMobileScreen() ? 30 : 40;
-const arena = document.getElementById("arena");
-const overlay = document.getElementById("start-screen-overlay");
+const arena = document.getElementById("gameArea");
+const gameOverlay = document.getElementById("gameOverlay");
+const startOverlay = document.getElementById("start-screen-overlay");
 const endScreen = document.getElementById("end-screen");
 const endOverlay = document.getElementById("end-screen-overlay");
 let z = 3;
@@ -634,24 +635,24 @@ function moveSnake() {
 
 document.addEventListener("keydown", queueTurn);
 
-const dPadRect = dPad.getBoundingClientRect();
+
 
 function handleTouch(event) {
+    const elem = event.target;
+    const elemRect = elem.getBoundingClientRect();
     const touch = event.touches[event.touches.length - 1];
     const clientX = touch.clientX;
     const clientY = touch.clientY;
-    const xInsideElement = clientX - dPadRect.left - dPad.width / 2;
-    const yInsideElement = clientY - dPadRect.top - dPad.height / 2;
-
+    const xInsideElement = clientX - elemRect.left - elemRect.width / 2;
+    const yInsideElement = clientY - elemRect.top - elemRect.height / 2;
     if (
         event.type == "touchstart" &&
         Math.hypot(Math.abs(xInsideElement), Math.abs(yInsideElement)) <
-        dPad.width / 7
+        elem.width / 7
     ) {
         lastTouchStartInCenter = new Date().getTime();
         return;
     }
-
     if (Math.abs(yInsideElement - xInsideElement) < 10) return;
     if (Math.abs(xInsideElement) > Math.abs(yInsideElement)) {
         // Left or right
@@ -670,6 +671,12 @@ function handleTouch(event) {
     }
 }
 
+function togglePaused() {
+    moving = !moving;
+    document.getElementById("pause-screen").style.visibility = moving ? "hidden" : "visible";
+}
+window.togglePaused = togglePaused;
+
 let lastTouchEnd = 0;
 document.addEventListener(
     "touchend",
@@ -687,8 +694,13 @@ document.addEventListener(
 );
 
 dPad.addEventListener("touchstart", handleTouch);
+gameOverlay.addEventListener("touchstart", handleTouch);
 
 dPad.addEventListener("touchmove", (event) => {
+    event.preventDefault();
+    handleTouch(event);
+});
+gameOverlay.addEventListener("touchmove", (event) => {
     event.preventDefault();
     handleTouch(event);
 });
@@ -700,7 +712,7 @@ function queueTurn(e) {
             startGame();
             return;
         }
-        moving = !moving;
+        togglePaused();
     }
     if (
         e.code == "ArrowUp" ||
@@ -748,8 +760,15 @@ function changeDirection(code) {
     }
 }
 
+function showHomescreen() {
+    document.getElementById("pause-screen").style.visibility = "hidden";
+    startOverlay.style.visibility = "visible";
+}
+window.showHomescreen = showHomescreen;
+
 function startGame() {
     let scoreTitle = getScoreTitle();
+    document.getElementById("pause-screen").style.visibility = "hidden";
     resetPictureModeImages();
     resetDiscoImages();
     best = localStorage.getItem(scoreTitle) ?
@@ -779,7 +798,7 @@ function startGame() {
     newHighScore = false;
     cardRevealedCountdown = 0;
 
-    overlay.style.visibility = "hidden";
+    startOverlay.style.visibility = "hidden";
     endScreen.style.visibility = "hidden";
     setScore(0);
     document.getElementById("bestScore").style.display = "inline";
