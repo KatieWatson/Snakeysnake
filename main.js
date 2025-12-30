@@ -687,7 +687,7 @@ document.addEventListener(
         }
         lastTouchEnd = now;
         if (lastTouchEnd - lastTouchStartInCenter <= 300) {
-            moving = !moving;
+            togglePaused();
         }
     },
     false
